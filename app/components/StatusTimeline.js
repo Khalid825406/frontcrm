@@ -54,11 +54,11 @@ const StatusTimeline = ({ timeline, job }) => {
            {status === 'In Progress' && job?.startWork && (
   <div className="timeline-img-remarks">
     {job.startWork.image && (
-      <img
-        src={`http://localhost:5000${job.startWork.image}`}
-        alt="Start Work"
-        className="timeline-img"
-      />
+    <img
+  src={job.startWork.image}
+  alt="Start Work"
+  className="timeline-img"
+/>
     )}
     {job.startWork.remark && ( // ✅ FIXED
       <div><strong>Remark:</strong> {job.startWork.remark}</div>
@@ -69,11 +69,11 @@ const StatusTimeline = ({ timeline, job }) => {
 {status === 'Completed' && job?.completion && (
   <div className="timeline-img-remarks">
     {job.completion.image && (
-      <img
-        src={`http://localhost:5000${job.completion.image}`}
-        alt="Completed Work"
-        className="timeline-img"
-      />
+        <img
+  src={job.startWork.image}
+  alt="Start Work"
+  className="timeline-img"
+/>
     )}
     {job.completion.remark && ( // ✅ FIXED
       <div><strong>Remark:</strong> {job.completion.remark}</div>

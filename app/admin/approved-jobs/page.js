@@ -88,23 +88,35 @@ export default function ApprovedJobsPage() {
 
   
         {showModal && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>Select Technician</h3>
-              <ul className="technician-list">
-                {technicians.map((tech) => (
-                  <li key={tech._id}>
-                     {tech.username} ({tech.phone}){' '}
-                    <button onClick={() => handleAssignTechnician(tech._id)} style={{ marginLeft: 10 }}>
-                      Assign
-                    </button>
-                     <button onClick={() => setShowModal(false)}>Cancel</button>
-                  </li>
-                ))}
-              </ul>
-             
-            </div>
+      <div className="modal-overlay">
+  <div className="modal">
+    <h3>Select Technician</h3>
+    <ul className="technician-list">
+      {technicians.map((tech) => (
+        <li key={tech._id}>
+          <div>
+            <div className="tech-info">{tech.username}</div>
+            <div className="tech-phone">{tech.phone}</div>
           </div>
+          <div>
+            <button
+              className="assign-btn"
+              onClick={() => handleAssignTechnician(tech._id)}
+            >
+              Assign
+            </button>
+            <button
+              className="cancel-btn"
+              onClick={() => setShowModal(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
         )}
       </main>
     </div>

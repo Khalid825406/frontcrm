@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -20,6 +18,8 @@ export default function TechnicianJobsPage() {
   const [uploadType, setUploadType] = useState('');
   const [uploadImage, setUploadImage] = useState(null);
   const [uploadRemarks, setUploadRemarks] = useState('');
+  const [loadingJobId, setLoadingJobId] = useState(null);
+  const [loadingActionType, setLoadingActionType] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -52,15 +52,24 @@ export default function TechnicianJobsPage() {
       console.error('Error fetching jobs:', err);
     } finally {
       setLoading(false);
+      setLoadingJobId(null);
+      setLoadingActionType('');
     }
   };
 
   const handleAccept = async (jobId) => {
-    const token = localStorage.token;
-    await axios.post(`https://new-crm-sdcn.onrender.com/api/admin/accept-job/${jobId}`, {}, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    fetchJobs();
+    setLoadingJobId(jobId);
+    setLoadingActionType('accept');
+
+    try {
+      const token = localStorage.token;
+      await axios.post(`https://new-crm-sdcn.onrender.com/api/admin/accept-job/${jobId}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchJobs();
+    } catch (err) {
+      console.error('Accept error:', err);
+    }
   };
 
   const handleRejectModal = (jobId) => {
@@ -69,15 +78,21 @@ export default function TechnicianJobsPage() {
   };
 
   const submitReject = async () => {
-    const token = localStorage.token;
-    await axios.post(`https://new-crm-sdcn.onrender.com/api/admin/reject-job/${selectedJobId}`, {
-      reason,
-    }, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setReason('');
-    setShowRejectModal(false);
-    fetchJobs();
+    setLoadingJobId(selectedJobId);
+    setLoadingActionType('reject');
+    try {
+      const token = localStorage.token;
+      await axios.post(`https://new-crm-sdcn.onrender.com/api/admin/reject-job/${selectedJobId}`, {
+        reason,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setReason('');
+      setShowRejectModal(false);
+      fetchJobs();
+    } catch (err) {
+      console.error('Reject error:', err);
+    }
   };
 
   const openUploadModal = (jobId, type) => {
@@ -86,28 +101,46 @@ export default function TechnicianJobsPage() {
     setUploadModal(true);
   };
 
-  const submitUpload = async () => {
-    const token = localStorage.token;
-    const formData = new FormData();
-    formData.append('image', uploadImage);
-    formData.append('remarks', uploadRemarks);
-    formData.append('type', uploadType);
+const submitUpload = async () => {
+  if (!uploadImage || !uploadRemarks) {
+    alert('Please provide both image and remarks');
+    return;
+  }
 
+  setLoadingJobId(uploadJobId);
+  setLoadingActionType(uploadType);
+
+  try {
+    const formData = new FormData();
+    formData.append('image', uploadImage); // File field - handled by multer in backend
+    formData.append('remarks', uploadRemarks); // Text field - for remark
+
+    const token = localStorage.token;
     const endpoint = uploadType === 'start' ? 'start-work' : 'complete-work';
 
-    await axios.post(`https://new-crm-sdcn.onrender.com/api/technician/${endpoint}/${uploadJobId}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
+    await axios.post(
+      `https://new-crm-sdcn.onrender.com/api/technician/${endpoint}/${uploadJobId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
 
     setUploadModal(false);
     setUploadImage(null);
     setUploadRemarks('');
     fetchJobs();
-  };
+  } catch (err) {
+    console.error('Upload error:', err);
+    alert('Failed to upload. Please try again.');
+  } finally {
+    setLoadingJobId(null);
+    setLoadingActionType('');
+  }
+};
 
 
   return (
@@ -124,16 +157,16 @@ export default function TechnicianJobsPage() {
           ) : (
             jobs.map((job) => (
               <div key={job._id} className="job-card">
-                 {job.images?.length > 0 && (
-                    <img
-                        src={
-                          job.images?.[0]?.startsWith('http')
-                            ? job.images[0]
-                            : `https://new-crm-sdcn.onrender.com${job.images?.[0]}`
-                        }
-                        alt={job.customerName}
-                        className="job-image"
-                      />
+                {job.images?.length > 0 && (
+                  <img
+                    src={
+                      job.images?.[0]?.startsWith('http')
+                        ? job.images[0]
+                        : `https://new-crm-sdcn.onrender.com${job.images?.[0]}`
+                    }
+                    alt={job.customerName}
+                    className="job-image"
+                  />
                 )}
                 <h4 className="job-title">Customer Name : {job.customerName}</h4>
                 <p><strong>Phone:</strong> {job.customerPhone}</p>
@@ -143,34 +176,54 @@ export default function TechnicianJobsPage() {
                 <p><strong>Location:</strong> {job.location}</p>
                 <p><strong>Priority:</strong> {job.priority}</p>
                 <p><strong>Remarks:</strong> {job.remarks}</p>
-               
                 <p>Status: <strong>{job.status}</strong></p>
 
                 <div className="button-group">
                   {job.status === 'Assigned' && (
                     <>
-                      <button onClick={() => handleAccept(job._id)} className="btn accept-btn">Accept</button>
-                      <button onClick={() => handleRejectModal(job._id)} className="btn reject-btn">Reject</button>
+                      <button
+                        onClick={() => handleAccept(job._id)}
+                        className="btn accept-btn"
+                        disabled={loadingJobId === job._id && loadingActionType === 'accept'}
+                      >
+                        {loadingJobId === job._id && loadingActionType === 'accept' ? 'Accepting...' : 'Accept'}
+                      </button>
+
+                      <button
+                        onClick={() => handleRejectModal(job._id)}
+                        className="btn reject-btn"
+                        disabled={loadingJobId === job._id && loadingActionType === 'reject'}
+                      >
+                        {loadingJobId === job._id && loadingActionType === 'reject' ? 'Loading...' : 'Reject'}
+                      </button>
                     </>
                   )}
 
                   {job.status === 'Accepted' && (
-                      <button onClick={() => openUploadModal(job._id, 'start')} className="btn progress-btn">
-                        Start Work
-                      </button>
-                  )}
-
-                  {job.status === 'In Progress' && (
-                    <button onClick={() => openUploadModal(job._id, 'complete')} className="btn complete-btn">
-                      Mark as Completed
+                    <button
+                      onClick={() => openUploadModal(job._id, 'start')}
+                      className="btn progress-btn"
+                      disabled={loadingJobId === job._id && loadingActionType === 'start'}
+                    >
+                      {loadingJobId === job._id && loadingActionType === 'start' ? 'Starting...' : 'Start Work'}
                     </button>
                   )}
 
+                  {job.status === 'In Progress' && (
+                    <button
+                      onClick={() => openUploadModal(job._id, 'complete')}
+                      className="btn complete-btn"
+                      disabled={loadingJobId === job._id && loadingActionType === 'complete'}
+                    >
+                      {loadingJobId === job._id && loadingActionType === 'complete' ? 'Completing...' : 'Completed'}
+                    </button>
+                  )}
                 </div>
               </div>
             ))
           )}
 
+          {/* Reject Modal */}
           {showRejectModal && (
             <div className="modal-overlay">
               <div className="modal-content">
@@ -189,11 +242,12 @@ export default function TechnicianJobsPage() {
             </div>
           )}
 
+          {/* Upload Modal */}
           {uploadModal && (
             <div className="modal-overlay">
               <div className="modal-content">
                 <h3 className="modal-title">{uploadType === 'start' ? 'Start Work' : 'Mark as Completed'}</h3>
-                <input type="file" onChange={(e) => setUploadImage(e.target.files[0])} className="modal-input" required/>
+                <input type="file" onChange={(e) => setUploadImage(e.target.files[0])} className="modal-input" required />
                 <textarea
                   className="modal-textarea"
                   placeholder="Enter remarks"
@@ -208,7 +262,6 @@ export default function TechnicianJobsPage() {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>

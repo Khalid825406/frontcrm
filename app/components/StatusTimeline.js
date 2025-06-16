@@ -1,5 +1,5 @@
 import React from 'react';
-import '../components/Assignedjobs.css';
+import '../components/AssignedJobs.css';
 
 const StatusTimeline = ({ timeline, job }) => {
   const latestStatus = timeline.length > 0 ? timeline[timeline.length - 1].status : 'Assigned';

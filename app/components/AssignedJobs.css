@@ -65,7 +65,7 @@
   align-items: center;
 }
 
-/* Circle styles */
+
 .circle {
   width: 30px;
   height: 30px;
@@ -88,7 +88,7 @@
   background: red !important;
 }
 
-/* Step info */
+
 .label {
   font-size: 14px;
   font-weight: bold;
@@ -111,10 +111,10 @@
   text-align: center;
 }
 
-/* Line between steps */
+
 .line {
   position: absolute;
-  top: 15px; /* center of circle */
+  top: 15px; 
   left: 50%;
   height: 4px;
   background: #ccc;

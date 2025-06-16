@@ -43,7 +43,7 @@ export default function RejectedJobsPage() {
   );
 }
 
-// Reuse same JobTable component
+
 function JobTable({ jobs, loading }) {
   if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
 

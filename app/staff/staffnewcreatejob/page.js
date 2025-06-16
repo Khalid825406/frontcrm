@@ -86,7 +86,7 @@ const handleSubmit = async (e) => {
        
         <main className={styles.formWrapper}>
           <form onSubmit={handleSubmit} className={styles.formGrid}>
-            {/* The form fields remain the same */}
+            
             <div>
               <label className={styles.label}>Customer Name</label>
               <input

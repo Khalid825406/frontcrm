@@ -22,7 +22,7 @@ const Topbar = ({ username }) => {
         padding: '0 20px',
         position: 'fixed',
         top: 0,
-        left: 260, // Adjust based on sidebar width
+        left: 260,
         right: 0,
         zIndex: 1000,
         boxShadow: '0 2px 5px rgba(0,0,0,0.1)',

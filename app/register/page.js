@@ -95,7 +95,7 @@ export default function RegisterPage() {
       setOtpSent(false);
       setOtpVerified(false);
 
-      // Redirect after 3 seconds
+     
       setTimeout(() => {
         window.location.href = '/login';
       }, 3000);

@@ -45,7 +45,7 @@ export default function AllOtherJobsPage() {
       const data = await res.json();
       if (res.ok) {
         alert('Job deleted successfully');
-        fetchJobs(); // refresh list
+        fetchJobs();
       } else {
         alert(data.message || 'Failed to delete job');
       }

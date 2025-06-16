@@ -1,4 +1,4 @@
-  /* Root container */
+
   .pageWrapper {
     display: flex;
     height: 100vh;
@@ -6,32 +6,32 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  /* Sidebar: fixed width, full height */
+ 
   .sidebar {
-    width: 220px; /* Should match your Sidebar component width */
+    width: 220px; 
     flex-shrink: 0;
-    background-color: #24292e; /* or your sidebar bg */
+    background-color: #24292e; 
     color: #fff;
     height: 100vh;
-    position: fixed; /* fixed sidebar */
+    position: fixed; 
     top: 0;
     left: 0;
     overflow-y: auto;
     z-index: 20;
   }
 
-  /* Main content area */
+
   .mainContent {
-    margin-left: 220px; /* same as sidebar width */
+    margin-left: 220px;
     flex: 1;
     display: flex;
     flex-direction: column;
     height: 100vh;
   }
 
-  /* Topbar fixed height and fixed at top inside mainContent */
+
   .topbar {
-    height: 60px; /* your Topbar height */
+    height: 60px; 
     flex-shrink: 0;
     background: #fff;
     border-bottom: 1px solid #ddd;
@@ -44,7 +44,7 @@
     box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
   }
 
-  /* Form wrapper fills remaining height and scrolls */
+ 
   .formWrapper {
     padding: 24px 32px;
     flex: 1;
@@ -55,19 +55,17 @@
     width: 950px;
   }
 
-  /* Form grid layout */
   .formGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
   }
 
-  /* Full width fields */
+  
   .fullWidth {
     grid-column: 1 / -1;
   }
 
-  /* Labels */
   .label {
     display: block;
     margin-bottom: 6px;
@@ -75,7 +73,7 @@
     color: #333;
   }
 
-  /* Inputs */
+
   .input{
       width: 90%;
     padding: 10px 12px;
@@ -107,7 +105,7 @@
     resize: vertical;
   }
 
-  /* Submit button */
+  
   .button {
     padding: 12px 20px;
     font-size: 1.1rem;

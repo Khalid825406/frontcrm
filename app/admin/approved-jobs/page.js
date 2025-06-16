@@ -17,7 +17,7 @@ export default function ApprovedJobsPage() {
     fetchApprovedJobs();
   }, []);
 
-  // ✅ Fetch Approved Jobs
+
   const fetchApprovedJobs = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -34,7 +34,7 @@ export default function ApprovedJobsPage() {
     }
   };
 
-  // ✅ Fetch Technicians
+ 
   const fetchTechnicians = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -49,7 +49,7 @@ export default function ApprovedJobsPage() {
     }
   };
 
-  // ✅ Assign Job to Technician
+
   const handleAssignTechnician = async (technicianId) => {
     const token = localStorage.getItem('token');
     try {
@@ -64,7 +64,7 @@ export default function ApprovedJobsPage() {
       );
       alert('✅ Technician assigned successfully');
       setShowModal(false);
-      fetchApprovedJobs(); // Refresh list
+      fetchApprovedJobs(); 
     } catch (err) {
       console.error(err);
       alert('Failed to assign technician');
@@ -86,7 +86,7 @@ export default function ApprovedJobsPage() {
           <JobCards jobs={jobs} loading={loading} onAssign={handleAssign} />
         </div>
 
-        {/* Technician Modal */}
+  
         {showModal && (
           <div className="modal-overlay">
             <div className="modal">

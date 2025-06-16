@@ -32,61 +32,59 @@ export default function NewCreateJobPage() {
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  try {
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'images' && Array.isArray(value)) {
-        value.forEach((file) => data.append('images', file));
-      } else {
-        data.append(key, value);
-      }
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    const token = localStorage.getItem('token'); // 🔐 Get token
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === 'images' && Array.isArray(value)) {
+          value.forEach((file) => data.append('images', file));
+        } else {
+          data.append(key, value);
+        }
+      });
 
-    await axios.post('https://new-crm-sdcn.onrender.com/api/jobs', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`, // 🔐 Add token here
-      },
-    });
+      const token = localStorage.getItem('token'); // 🔐 Auth token
 
-    alert('Job submitted successfully for admin approval');
-    setFormData({
-      customerName: '',
-      customerPhone: '',
-      workType: '',
-      reason: '',
-      datetime: '',
-      location: '',
-      priority: 'Medium',
-      remarks: '',
-      images: [],
-    });
-  } catch (error) {
-    console.error('Error submitting job:', error);
-    alert(error.response?.data?.message || 'Error creating job');
-  } finally {
-    setLoading(false);
-  }
-};
+      // IMPORTANT: Do NOT set Content-Type manually for FormData
+      await axios.post('https://new-crm-sdcn.onrender.com/api/jobs', data, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Auth header only
+        },
+      });
 
+      alert('Job submitted successfully for admin approval');
+
+      setFormData({
+        customerName: '',
+        customerPhone: '',
+        workType: '',
+        reason: '',
+        datetime: '',
+        location: '',
+        priority: 'Medium',
+        remarks: '',
+        images: [],
+      });
+    } catch (error) {
+      console.error('Error submitting job:', error);
+      alert(error.response?.data?.message || 'Error creating job');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.pageWrapper}>
-      <Sidebar role="admin"/>  
+      <Sidebar role="admin" />
 
       <div className={styles.mainContent}>
+        <Topbar username="Admin" />
 
-       <Topbar username="Admin" />
-      
-       
         <main className={styles.formWrapper}>
           <form onSubmit={handleSubmit} className={styles.formGrid}>
-            {/* The form fields remain the same */}
             <div>
               <label className={styles.label}>Customer Name</label>
               <input

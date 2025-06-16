@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import { FileClock, UserCheck, Users ,Briefcase ,CheckCircle  } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -41,6 +42,12 @@ export default function AdminDashboard() {
   const pendingUsers = users.filter(u => !u.approved && !u.rejected);
   const otherUsers = users.filter(u => u.approved || u.rejected);
   const pendingJobs = jobs.filter(j => !j.approved && !j.rejected);
+  const assignedJobs = jobs.filter(j => j.assignedTechnician);
+  const completedJobs = jobs.filter(j => j.status === 'Completed');
+  const approvedJobs = jobs.filter(j => j.approved);
+
+
+
 
   function getStatus(item) {
     if (item.approved) return 'Approved';
@@ -73,43 +80,180 @@ export default function AdminDashboard() {
       >
         <Topbar username="Admin" />
 
-        {/* Pending Approvals Summary */}
-        <div style={{ display: 'flex', gap: 20, marginBottom: 30, maxWidth: 600, marginTop: 60, marginLeft: 60 }}>
+    
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, marginBottom: 30, maxWidth: 930, marginTop: 60, marginLeft: 54 }}>
           <div
             style={{
-              backgroundColor: '#cff4fc',
-              color: '#0275d8',
+              backgroundColor: '#3b82f6',
+              color: '#fff',
               padding: 20,
               borderRadius: 10,
               fontWeight: 'bold',
               flex: 1,
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
             }}
             title="Pending user approvals"
           >
-            Pending User Approvals
-            <span style={{ fontSize: 28 }}>{pendingUsers.length}</span>
+            <div style={{width: 202}}>
+          <span style={{ fontSize: 60 }}>{pendingUsers.length}</span>
+           <div>Pending User Approvals</div> 
+            </div>
+            <div>
+              <UserCheck style={{width:54, height:54}}/>
+            </div>
           </div>
 
           <div
             style={{
-              backgroundColor: '#d4edda',
-              color: '#155724',
+                  backgroundColor: '#10b981',
+    color: 'white',
+
+              padding: 20,
+              borderRadius: 10,
+              fontWeight: 'bold',
+              flex: 1,
+               display: 'flex',
+                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+            }}
+            title="Pending job approvals"
+          >
+            <div style={{width: 202}}>
+               <div style={{ fontSize: 60 }}>{pendingJobs.length}</div>
+               <div>Pending Job Approvals</div> 
+            </div>
+            <div>
+              <FileClock style={{width:54, height:54}}/>
+            </div>
+          </div>
+
+           {/* All Users */}
+          <div
+            style={{
+                backgroundColor: '#f97316',
+    color: 'white',
               padding: 20,
               borderRadius: 10,
               fontWeight: 'bold',
               flex: 1,
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center',
+                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
             }}
-            title="Pending job approvals"
+            title="All Users"
           >
-            Pending Job Approvals
-            <span style={{ fontSize: 28 }}>{pendingJobs.length}</span>
+            <div style={{width: 202}}>
+              <div style={{ fontSize: 60 }}>{users.length}</div>
+              <div>All Users</div>
+            </div>
+            <div>
+              <Users style={{ width: 54, height: 54 }} />
+            </div>
           </div>
+
+            <div
+              style={{
+              backgroundColor: '#8b5cf6',
+    color: 'white',
+                padding: 20,
+                borderRadius: 10,
+                fontWeight: 'bold',
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'space-between',
+                minWidth: 250,
+                  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+              }}
+              title="Assigned Jobs"
+            >
+          <div style={{width: 202}}>
+            <div style={{ fontSize: 60 }}>{assignedJobs.length}</div>
+            <div>Assigned Jobs</div>
+          </div>
+            <div>
+              <Briefcase style={{ width: 54, height: 54 }} />
+            </div>
+           </div>
+
+            {/* ✅ Completed Jobs */}
+  <div
+    style={{
+      backgroundColor: '#059669',
+    color: 'white',
+      padding: 20,
+      borderRadius: 10,
+      fontWeight: 'bold',
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'space-between',
+      minWidth: 250,
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+    }}
+    title="Completed Jobs"
+  >
+    <div style={{ width: 202 }}>
+      <div style={{ fontSize: 60 }}>{completedJobs.length}</div>
+      <div>Completed Jobs</div>
+    </div>
+    <div>
+      <CheckCircle style={{ width: 54, height: 54 }} />
+    </div>
+  </div>
+
+
+  {/* ✅ All Jobs */}
+<div
+  style={{
+   backgroundColor: '#f43f5e',
+  color: 'white',
+    padding: 20,
+    borderRadius: 10,
+    fontWeight: 'bold',
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'space-between',
+    minWidth: 250,
+      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+  }}
+  title="All Jobs"
+>
+  <div style={{ width: 202 }}>
+    <div style={{ fontSize: 60 }}>{jobs.length}</div>
+    <div>All Jobs</div>
+  </div>
+  <div>
+    <Briefcase style={{ width: 54, height: 54 }} />
+  </div>
+
+  
+</div>
+
+{/* ✅ Approved Jobs */}
+<div
+  style={{
+   backgroundColor: '#14b8a6',
+    color: 'white',
+    padding: 20,
+    borderRadius: 10,
+    fontWeight: 'bold',
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'space-between',
+    minWidth: 250,
+      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+  }}
+  title="Approved Jobs"
+>
+  <div style={{ width: 202 }}>
+    <div style={{ fontSize: 60 }}>{approvedJobs.length}</div>
+    <div>Approved Jobs</div>
+  </div>
+  <div>
+    <CheckCircle style={{ width: 54, height: 54 }} />
+  </div>
+</div>
+
+
         </div>
 
         {/* Other Users Table */}

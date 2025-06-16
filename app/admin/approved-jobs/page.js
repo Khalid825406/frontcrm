@@ -1,25 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import '../approved-jobs/approval.css';
 
 export default function ApprovedJobsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [technicians, setTechnicians] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null);
 
   useEffect(() => {
     fetchApprovedJobs();
   }, []);
 
-  async function fetchApprovedJobs() {
+  // ✅ Fetch Approved Jobs
+  const fetchApprovedJobs = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const data = await res.json();
-      const approved = data.filter((job) => job.approved && !job.rejected);
+      const approved = res.data.filter((job) => job.approved && !job.rejected && !job.assignedTo);
       setJobs(approved);
     } catch (err) {
       console.error(err);
@@ -27,7 +32,49 @@ export default function ApprovedJobsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  // ✅ Fetch Technicians
+  const fetchTechnicians = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-technicians', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTechnicians(res.data);
+      setShowModal(true);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to fetch technicians');
+    }
+  };
+
+  // ✅ Assign Job to Technician
+  const handleAssignTechnician = async (technicianId) => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.post(
+        'https://new-crm-sdcn.onrender.com/api/admin/assign-job',
+        { jobId: selectedJobId, technicianId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert('✅ Technician assigned successfully');
+      setShowModal(false);
+      fetchApprovedJobs(); // Refresh list
+    } catch (err) {
+      console.error(err);
+      alert('Failed to assign technician');
+    }
+  };
+
+  const handleAssign = (jobId) => {
+    setSelectedJobId(jobId);
+    fetchTechnicians();
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -36,61 +83,65 @@ export default function ApprovedJobsPage() {
         <Topbar username="Admin" />
         <div style={{ maxWidth: 1400, margin: '60px auto' }}>
           <h2 style={{ marginBottom: 20 }}>Approved Jobs</h2>
-          <JobTable jobs={jobs} loading={loading} />
+          <JobCards jobs={jobs} loading={loading} onAssign={handleAssign} />
         </div>
+
+        {/* Technician Modal */}
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Select Technician</h3>
+              <ul className="technician-list">
+                {technicians.map((tech) => (
+                  <li key={tech._id}>
+                     {tech.username} ({tech.phone}){' '}
+                    <button onClick={() => handleAssignTechnician(tech._id)} style={{ marginLeft: 10 }}>
+                      Assign
+                    </button>
+                     <button onClick={() => setShowModal(false)}>Cancel</button>
+                  </li>
+                ))}
+              </ul>
+             
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
 }
 
-// Reusable table component
-function JobTable({ jobs, loading }) {
+function JobCards({ jobs, loading, onAssign }) {
   if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
-
-  if (jobs.length === 0) {
-    return <p style={{ padding: 20 }}>No approved jobs found.</p>;
-  }
+  if (jobs.length === 0) return <p style={{ padding: 20 }}>No approved jobs found.</p>;
 
   return (
-    <div style={{ backgroundColor: 'white', borderRadius: 10, padding: 20, boxShadow: '0 1px 5px rgba(0,0,0,0.1)', overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
-        <thead>
-          <tr style={{ backgroundColor: '#f2f2f2' }}>
-            <th style={thStyle}>Customer</th>
-            <th style={thStyle}>Phone</th>
-            <th style={thStyle}>Work Type</th>
-            <th style={thStyle}>Location</th>
-            <th style={thStyle}>Date/Time</th>
-            <th style={thStyle}>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {jobs.map((job) => (
-            <tr key={job._id}>
-              <td style={tdStyle}>{job.customerName}</td>
-              <td style={tdStyle}>{job.customerPhone}</td>
-              <td style={tdStyle}>{job.workType}</td>
-              <td style={tdStyle}>{job.location}</td>
-              <td style={tdStyle}>{new Date(job.datetime).toLocaleString()}</td>
-              <td style={{ ...tdStyle, color: '#4CAF50', fontWeight: 600 }}>Approved</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="card-container">
+      {jobs.map((job) => (
+        <div className="job-card" key={job._id}>
+            <img
+              src={
+                job.images?.[0]?.startsWith('http')
+                  ? job.images[0]
+                  : `https://new-crm-sdcn.onrender.com${job.images?.[0]}`
+              }
+              alt={job.customerName}
+              className="job-image"
+            />
+          <div className="job-details">
+            <h3>Customer Name : {job.customerName}</h3>
+            <p><strong>Phone:</strong> {job.customerPhone}</p>
+            <p><strong>Work Type:</strong> {job.workType}</p>
+            <p><strong>Location:</strong> {job.location}</p>
+            <p><strong>Date/Time:</strong> {new Date(job.datetime).toLocaleString()}</p>
+            <p><strong>Reason:</strong> {job.reason}</p>
+            <p><strong>Priority:</strong> {job.priority}</p>
+            <p><strong>Remarks:</strong> {job.remarks}</p>
+            <p className="job-status">Status: Approved</p>
+            <button className="assign-button" onClick={() => onAssign(job._id)}>Assign</button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
-
-const thStyle = {
-  textAlign: 'left',
-  padding: '12px',
-  fontWeight: 600,
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-};
-
-const tdStyle = {
-  padding: '10px 12px',
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-};

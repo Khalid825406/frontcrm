@@ -1,141 +1,248 @@
 'use client';
 
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
     username: '',
     password: '',
     role: 'staff',
-    assignedJobs: ''
+    phone: '',
+    otp: ''
   });
+
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+
+    if (name === 'phone') {
+      setOtpSent(false);
+      setOtpVerified(false);
+      setError('');
+      setSuccess('');
+      setForm(prev => ({ ...prev, otp: '' }));
+    }
   };
 
-  const handleSubmit = async e => {
+  const sendOtp = async () => {
+    setError('');
+    setSuccess('');
+
+    if (!/^\d{10}$/.test(form.phone)) {
+      setError('Enter a valid 10-digit mobile number.');
+      return;
+    }
+
+    try {
+      const formattedPhone = `+91${form.phone}`;
+      await axios.post('https://new-crm-sdcn.onrender.com/api/send-otp', { phone: formattedPhone });
+      setOtpSent(true);
+      setSuccess('OTP sent successfully!');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to send OTP.');
+    }
+  };
+
+  const verifyOtp = async () => {
+    setError('');
+    setSuccess('');
+
+    if (form.otp.length !== 6) {
+      setError('Enter a valid 6-digit OTP.');
+      return;
+    }
+
+    try {
+      const formattedPhone = `+91${form.phone}`;
+      await axios.post('https://new-crm-sdcn.onrender.com/api/verify-otp', {
+        phone: formattedPhone,
+        code: form.otp
+      });
+      setOtpVerified(true);
+      setSuccess('OTP verified successfully!');
+    } catch (err) {
+      setError(err.response?.data?.message || 'OTP verification failed.');
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    const jobsArray = form.assignedJobs
-      .split(',')
-      .map(job => job.trim())
-      .filter(job => job);
+    if (!otpVerified) {
+      setError('Please verify OTP before submitting.');
+      return;
+    }
 
-    const res = await fetch('https://new-crm-sdcn.onrender.com/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, assignedJobs: jobsArray })
-    });
+    try {
+      const formattedPhone = `+91${form.phone}`;
+      const res = await axios.post('https://new-crm-sdcn.onrender.com/api/auth/register', {
+        username: form.username,
+        password: form.password,
+        role: form.role,
+        phone: formattedPhone
+      });
 
-    const data = await res.json();
-    if (res.ok) {
-      setSuccess(data.message);
-      setForm({ username: '', password: '', role: 'staff', assignedJobs: '' });
+      setSuccess(res.data.message || 'Registered successfully. Awaiting admin approval.');
+      setForm({ username: '', password: '', role: 'staff', phone: '', otp: '' });
+      setOtpSent(false);
+      setOtpVerified(false);
 
-      // ✅ Redirect to login page after 2.5 seconds
+      // Redirect after 3 seconds
       setTimeout(() => {
         window.location.href = '/login';
-      }, 2500);
-    } else {
-      setError(data.message);
+      }, 3000);
+
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed.');
     }
   };
 
   return (
-    <>
-      <style>{`
+    <div className="container">
+      <h2>Register</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Username</label>
+        <input
+          name="username"
+          placeholder="Enter your username"
+          value={form.username}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Password</label>
+        <input
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Role</label>
+        <select name="role" value={form.role} onChange={handleChange} required>
+          <option value="staff">Staff</option>
+          <option value="technician">Technician</option>
+        </select>
+
+        <label>Mobile Number</label>
+        <div className="input-row">
+          <input
+            name="phone"
+            placeholder="10-digit number"
+            value={form.phone}
+            onChange={handleChange}
+            maxLength={10}
+            inputMode="numeric"
+            required
+          />
+          <button type="button" className="secondary" onClick={sendOtp} disabled={otpSent}>
+            {otpSent ? 'OTP Sent' : 'Send OTP'}
+          </button>
+        </div>
+
+        {otpSent && (
+          <>
+            <label>Enter OTP</label>
+            <div className="input-row">
+              <input
+                name="otp"
+                placeholder="6-digit OTP"
+                value={form.otp}
+                onChange={handleChange}
+                maxLength={6}
+                inputMode="numeric"
+                required
+              />
+              <button type="button" className="secondary" onClick={verifyOtp} disabled={otpVerified}>
+                {otpVerified ? 'Verified' : 'Verify'}
+              </button>
+            </div>
+          </>
+        )}
+
+        <button type="submit" className="primary" disabled={!otpVerified}>
+          Register
+        </button>
+      </form>
+
+      {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
+
+      <style jsx>{`
         .container {
-          max-width: 400px;
+          max-width: 480px;
           margin: 60px auto;
-          padding: 30px 25px;
-          background-color: #fff;
-          border-radius: 8px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          padding: 40px;
+          background: #f9f9f9;
+          border-radius: 16px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         h2 {
           text-align: center;
-          margin-bottom: 25px;
-          color: #333;
+          margin-bottom: 30px;
+          font-size: 26px;
         }
         form {
           display: flex;
           flex-direction: column;
+          gap: 15px;
+        }
+        label {
+          font-weight: 500;
+          margin-bottom: 5px;
         }
         input, select {
-          padding: 12px 15px;
-          margin-bottom: 18px;
-          border: 1.5px solid #ddd;
-          border-radius: 6px;
-          font-size: 15px;
-          transition: border-color 0.3s ease;
-        }
-        input:focus, select:focus {
+          padding: 12px 14px;
+          font-size: 16px;
+          border: 1.5px solid #ccc;
+          border-radius: 8px;
           outline: none;
-          border-color: #0066cc;
-          box-shadow: 0 0 6px rgba(0,102,204,0.3);
         }
-        button {
+        .input-row {
+          display: flex;
+          gap: 10px;
+        }
+        .primary, .secondary {
           padding: 12px;
-          background-color: #0066cc;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .primary {
+          background-color: #0070f3;
           color: white;
           border: none;
-          border-radius: 6px;
-          font-size: 16px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
         }
-        button:hover {
-          background-color: #004999;
+        .secondary {
+          background-color: #e0e0e0;
+          color: #333;
+          border: none;
         }
-        p.message {
-          text-align: center;
-          margin-top: 15px;
-          font-weight: 600;
+        button:disabled {
+          background-color: #aaa;
+          cursor: not-allowed;
         }
-        p.error {
+        .error {
           color: #d93025;
+          margin-top: 20px;
+          text-align: center;
         }
-        p.success {
+        .success {
           color: #188038;
+          margin-top: 20px;
+          text-align: center;
         }
       `}</style>
-
-      <div className="container">
-        <h2>Register</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            placeholder="Username"
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Password"
-            required
-          />
-          <select name="role" value={form.role} onChange={handleChange} required>
-            <option value="">Select Role</option>
-            <option value="staff">Office Staff</option>
-            <option value="technician">Technician</option>
-          </select>
-
-          <button type="submit">Register</button>
-        </form>
-
-        {error && <p className="message error">{error}</p>}
-        {success && <p className="message success">{success}</p>}
-      </div>
-    </>
+    </div>
   );
 }

@@ -70,8 +70,8 @@ export default function PendingApprovalsPage() {
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',
-          marginLeft: 240, // sidebar width
-          paddingTop: 60,  // topbar height
+          marginLeft: 240,
+          paddingTop: 60,  
           overflowY: 'auto',
           height: '100vh'
         }}

@@ -6,7 +6,7 @@ import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatusTimeline from '../../components/StatusTimeline';
 
-export default function AdminActiveJobsPage() {
+export default function AdminRejectedJobsPage() {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
 
@@ -22,14 +22,14 @@ export default function AdminActiveJobsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        const activeJobs = res.data.filter((job) => {
+        const rejectedJobs = res.data.filter((job) => {
           const latestStatus = job.statusTimeline[job.statusTimeline.length - 1]?.status;
-          return latestStatus !== 'Completed' && latestStatus !== 'Rejected';
+          return latestStatus === 'Rejected';
         });
-        setJobs(activeJobs);
+        setJobs(rejectedJobs);
       })
       .catch((err) => {
-        console.error('Error fetching jobs:', err);
+        console.error('Error fetching rejected jobs:', err);
         setError('Failed to load jobs. Please try again.');
       });
   }, []);
@@ -39,9 +39,9 @@ export default function AdminActiveJobsPage() {
       <Sidebar role="admin" />
       <main style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
         <Topbar username="Admin" />
-        <h2>Active Assigned Jobs</h2>
+        <h2>Rejected Jobs by Technician</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {jobs.length === 0 && !error && <p>No active jobs found.</p>}
+        {jobs.length === 0 && !error && <p>No rejected jobs found.</p>}
         {jobs.map((j) => (
           <div
             key={j._id}

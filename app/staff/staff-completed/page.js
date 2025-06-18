@@ -6,12 +6,12 @@ import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatusTimeline from '../../components/StatusTimeline';
 
-export default function AdminActiveJobsPage() {
+export default function AdminCompletedJobsPage() {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.token;
     if (!token) {
       setError('No token found. Please login again.');
       return;
@@ -22,11 +22,11 @@ export default function AdminActiveJobsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        const activeJobs = res.data.filter((job) => {
+        const completedJobs = res.data.filter((job) => {
           const latestStatus = job.statusTimeline[job.statusTimeline.length - 1]?.status;
-          return latestStatus !== 'Completed' && latestStatus !== 'Rejected';
+          return latestStatus === 'Completed';
         });
-        setJobs(activeJobs);
+        setJobs(completedJobs);
       })
       .catch((err) => {
         console.error('Error fetching jobs:', err);
@@ -36,12 +36,11 @@ export default function AdminActiveJobsPage() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar role="admin" />
+      <Sidebar role="staff" />
       <main style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
-        <Topbar username="Admin" />
-        <h2>Active Assigned Jobs</h2>
+        <h2>Completed Jobs</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {jobs.length === 0 && !error && <p>No active jobs found.</p>}
+        {jobs.length === 0 && !error && <p>No completed jobs found.</p>}
         {jobs.map((j) => (
           <div
             key={j._id}
@@ -49,7 +48,7 @@ export default function AdminActiveJobsPage() {
             style={{ marginBottom: 20, padding: 15, border: '1px solid #ccc', borderRadius: 8 }}
           >
             <div>
-              {j.images?.[0] && (
+              {j.images && j.images[0] && (
                 <img src={j.images[0]} alt="Job" style={{ width: '100%', height: 300 }} />
               )}
               <h4>Customer Name: {j.customerName}</h4>
@@ -65,6 +64,7 @@ export default function AdminActiveJobsPage() {
             <StatusTimeline timeline={j.statusTimeline} job={j} />
           </div>
         ))}
+        <Topbar username="newstaff" />
       </main>
     </div>
   );

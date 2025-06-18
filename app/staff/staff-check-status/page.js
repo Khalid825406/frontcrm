@@ -36,9 +36,9 @@ export default function AdminActiveJobsPage() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar role="admin" />
+      <Sidebar role="staff" />
       <main style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
-        <Topbar username="Admin" />
+        <Topbar username="newstaff" />
         <h2>Active Assigned Jobs</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {jobs.length === 0 && !error && <p>No active jobs found.</p>}

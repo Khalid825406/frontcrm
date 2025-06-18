@@ -1,146 +1,148 @@
-
-
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
-import { Briefcase, CheckCircle } from 'lucide-react';
-
-function Topbar({ username }) {
-  const router = useRouter();
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    router.push('/login');
-  };
-
-  return (
-    <header style={{
-      height: 60,
-      backgroundColor: '#1f2937',
-      color: 'white',
-      padding: '0 20px',
-      position: 'fixed',
-      top: 0,
-      left: 240,
-      right: 0,
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
-      boxSizing: 'border-box',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-      zIndex: 1000,
-    }}>
-      <div>Welcome, <b>{username || '...'}</b></div>
-      <button
-        onClick={logout}
-        style={{
-          backgroundColor: '#ef4444',
-          border: 'none',
-          padding: '8px 15px',
-          borderRadius: 5,
-          color: 'white',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          fontSize: 14
-        }}
-        onMouseOver={e => e.currentTarget.style.backgroundColor = '#dc2626'}
-        onMouseOut={e => e.currentTarget.style.backgroundColor = '#ef4444'}
-      >
-        Logout
-      </button>
-    </header>
-  );
-}
+import Topbar from '../../components/Topbar';
+import { Hammer, Briefcase, CheckCircle2 } from 'lucide-react';
 
 export default function TechnicianDashboard() {
   const router = useRouter();
-
-  const [user, setUser] = useState('TechnicianUser'); 
+  const [username, setUsername] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return router.push('/login');
+
+    const fetchData = async () => {
+      try {
+        // Fetch technician profile
+        const resUser = await axios.get('https://new-crm-sdcn.onrender.com/api/user/dashboard', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (resUser.data && resUser.data.user && resUser.data.role === 'technician') {
+          setUsername(resUser.data.user);
+        }
+
+        // Fetch assigned jobs (make sure this route exists in backend)
+        const resJobs = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/assigned-jobs-status', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const allJobs = Array.isArray(resJobs.data) ? resJobs.data : [];
+        setJobs(allJobs);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setJobs([]); // fallback to empty list
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [router]);
 
+  const completedJobs = jobs.filter(j => j.status === 'Completed');
+  const activeJobs = jobs.filter(j => ['Assigned', 'Accepted', 'In Progress'].includes(j.status));
 
-  const completedJobsCount = 0;
-  const allJobsCount = 0;
+  if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
 
   return (
-    <div style={{ display: 'flex', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}>
+    <div style={{ display: 'flex', height: '100vh', fontFamily: 'Segoe UI, Tahoma, sans-serif' }}>
       <Sidebar role="technician" />
+      <main
+        style={{
+          flex: 1,
+          backgroundColor: '#f9f9f9',
+          marginLeft: 240,
+          paddingTop: 60,
+          overflowY: 'auto',
+          height: '100vh',
+        }}
+      >
+        <Topbar username={username} />
 
-      <main style={{
-        marginLeft: 240,
-        marginTop: 60,
-        padding: 20,
-        flex: 1,
-        backgroundColor: '#f9f9f9',
-        minHeight: '100vh',
-        boxSizing: 'border-box',
-        overflowY: 'auto'
-      }}>
-        <Topbar username={user} />
-
-    
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 20,
-          marginBottom: 30,
-          maxWidth: 930,
-          marginTop: 60,
-          marginLeft: 54
-        }}>
-
-       
-          <div style={{
-            backgroundColor: '#059669',
-            color: 'white',
-            padding: 20,
-            borderRadius: 10,
-            fontWeight: 'bold',
-            flex: 1,
+        <div
+          style={{
             display: 'flex',
-            justifyContent: 'space-between',
-            minWidth: 250,
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+            gap: 20,
+            flexWrap: 'wrap',
+            padding: '20px 50px',
+            marginTop: 20,
           }}
-            title="Completed Jobs"
+        >
+          {/* Active Jobs */}
+          <div
+            style={{
+              flex: 1,
+              backgroundColor: '#10b981',
+              padding: 20,
+              borderRadius: 10,
+              color: '#fff',
+              fontWeight: 'bold',
+              minWidth: 250,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
           >
-            <div style={{ width: 202 }}>
-              <div style={{ fontSize: 60 }}>{completedJobsCount}</div>
+            <div>
+              <div style={{ fontSize: 50 }}>{activeJobs.length}</div>
+              <div>My Assigned Jobs</div>
+            </div>
+            <Hammer size={50} />
+          </div>
+
+          {/* Total Jobs */}
+          <div
+            style={{
+              flex: 1,
+              backgroundColor: '#f97316',
+              padding: 20,
+              borderRadius: 10,
+              color: '#fff',
+              fontWeight: 'bold',
+              minWidth: 250,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 50 }}>{jobs.length}</div>
+              <div>Total Jobs</div>
+            </div>
+            <Briefcase size={50} />
+          </div>
+
+          {/* Completed Jobs */}
+          <div
+            style={{
+              flex: 1,
+              backgroundColor: '#3b82f6',
+              padding: 20,
+              borderRadius: 10,
+              color: '#fff',
+              fontWeight: 'bold',
+              minWidth: 250,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 50 }}>{completedJobs.length}</div>
               <div>Completed Jobs</div>
             </div>
-            <CheckCircle style={{ width: 54, height: 54 }} />
+            <CheckCircle2 size={50} />
           </div>
-
-       
-          <div style={{
-            backgroundColor: '#f43f5e',
-            color: 'white',
-            padding: 20,
-            borderRadius: 10,
-            fontWeight: 'bold',
-            flex: 1,
-            display: 'flex',
-            justifyContent: 'space-between',
-            minWidth: 250,
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-          }}
-            title="All Jobs"
-          >
-            <div style={{ width: 202 }}>
-              <div style={{ fontSize: 60 }}>{allJobsCount}</div>
-              <div>All Jobs</div>
-            </div>
-            <Briefcase style={{ width: 54, height: 54 }} />
-          </div>
-
         </div>
       </main>
     </div>

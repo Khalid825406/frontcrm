@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import axios from 'axios';
 
 const thStyle = { padding: '8px 12px', borderBottom: '1px solid #ddd', textAlign: 'left' };
 const tdStyle = { padding: '8px 12px', borderBottom: '1px solid #eee' };
@@ -10,27 +11,41 @@ const tdStyle = { padding: '8px 12px', borderBottom: '1px solid #eee' };
 export default function StaffJobsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
-    fetchStaffJobs();
-  }, []);
+    const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
 
-  async function fetchStaffJobs() {
-    const token = localStorage.getItem('token');
-    try {
-      const res = await fetch('https://new-crm-sdcn.onrender.com/api/jobs/staff/jobs', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
-      setJobs(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to fetch your jobs');
-    } finally {
-      setLoading(false);
-    }
-  }
+      try {
+        // 🔹 Fetch jobs
+        const jobsRes = await fetch('https://new-crm-sdcn.onrender.com/api/jobs/staff/jobs', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!jobsRes.ok) throw new Error('Failed to fetch jobs');
+        const jobsData = await jobsRes.json();
+        setJobs(Array.isArray(jobsData) ? jobsData : []);
+      } catch (err) {
+        console.error('Error fetching jobs:', err);
+        alert('Failed to fetch your jobs');
+      } finally {
+        setLoading(false);
+      }
+
+      try {
+        // 🔹 Fetch username
+        const userRes = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUsername(userRes.data.name); // backend is sending `{ name: "username" }`
+      } catch (err) {
+        console.error('Error fetching username:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   function getStatus(job) {
     if (job.approved) return 'Approved';
@@ -59,7 +74,7 @@ export default function StaffJobsPage() {
           overflowY: 'auto',
         }}
       >
-        <Topbar username="Khalid" />
+        <Topbar username={username} />
         <div style={{ maxWidth: 1400, margin: '60px auto' }}>
           <h2 style={{ marginBottom: 20 }}>My Jobs</h2>
           <div
@@ -110,7 +125,13 @@ export default function StaffJobsPage() {
                           ? `${job.images.length} image(s)`
                           : 'No images'}
                       </td>
-                      <td style={{ ...tdStyle, color: getStatusColor(getStatus(job)), fontWeight: 600 }}>
+                      <td
+                        style={{
+                          ...tdStyle,
+                          color: getStatusColor(getStatus(job)),
+                          fontWeight: 600,
+                        }}
+                      >
                         {getStatus(job)}
                       </td>
                       <td style={tdStyle}>{new Date(job.createdAt).toLocaleString()}</td>

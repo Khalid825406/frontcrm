@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import styles from './staff.module.css';
 import Sidebar from '@/app/components/Sidebar';
 import Topbar from '@/app/components/Topbar';
+
+
 
 export default function NewCreateJobPage() {
   const [formData, setFormData] = useState({
@@ -20,6 +22,63 @@ export default function NewCreateJobPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestionBoxRef = useRef(null);
+  const [username, setUsername] = useState('');
+
+  
+
+  // Fetch suggestions
+  const handleCustomerNameChange = async (e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({ ...prev, customerName: value }));
+
+    if (value.length > 1) {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(
+          `https://new-crm-sdcn.onrender.com/api/jobs/customers?query=${value}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setSuggestions(res.data || []);
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error('Error fetching suggestions:', err);
+      }
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  // Autofill on suggestion click
+  const handleSuggestionSelect = (job) => {
+    setFormData({
+      customerName: job.customerName,
+      customerPhone: job.customerPhone || '',
+      workType: job.workType || '',
+      reason: job.reason || '',
+      datetime: job.datetime ? job.datetime.slice(0, 16) : '',
+      location: job.location || '',
+      priority: job.priority || 'Medium',
+      remarks: job.remarks || '',
+      images: [],
+    });
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
+  // Hide dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,71 +91,106 @@ export default function NewCreateJobPage() {
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  try {
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'images' && Array.isArray(value)) {
-        value.forEach((file) => data.append('images', file));
-      } else {
-        data.append(key, value);
-      }
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === 'images') {
+          value.forEach((file) => data.append('images', file));
+        } else {
+          data.append(key, value);
+        }
+      });
 
-    const token = localStorage.getItem('token'); // 🔐 Get token
+      const token = localStorage.getItem('token');
+      await axios.post('https://new-crm-sdcn.onrender.com/api/jobs', data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    await axios.post('https://new-crm-sdcn.onrender.com/api/jobs', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`, // 🔐 Add token here
-      },
-    });
+      alert('Job submitted successfully for admin approval');
 
-    alert('Job submitted successfully for admin approval');
-    setFormData({
-      customerName: '',
-      customerPhone: '',
-      workType: '',
-      reason: '',
-      datetime: '',
-      location: '',
-      priority: 'Medium',
-      remarks: '',
-      images: [],
-    });
-  } catch (error) {
-    console.error('Error submitting job:', error);
-    alert(error.response?.data?.message || 'Error creating job');
-  } finally {
-    setLoading(false);
-  }
-};
+      setFormData({
+        customerName: '',
+        customerPhone: '',
+        workType: '',
+        reason: '',
+        datetime: '',
+        location: '',
+        priority: 'Medium',
+        remarks: '',
+        images: [],
+      });
+    } catch (error) {
+      console.error('Error submitting job:', error);
+      alert(error.response?.data?.message || 'Error creating job');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+useEffect(() => {
+  const fetchUsername = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
 
+      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUsername(res.data.name); // or res.data.username depending on response
+    } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+  };
+
+  fetchUsername();
+}, []);
+
+  
   return (
     <div className={styles.pageWrapper}>
-      <Sidebar role="staff"/>  
+      <Sidebar role="staff" />
 
       <div className={styles.mainContent}>
+       <Topbar username={username} />
 
-       <Topbar username="Khalid" />
-      
-       
         <main className={styles.formWrapper}>
           <form onSubmit={handleSubmit} className={styles.formGrid}>
-            
-            <div>
+            {/* Customer Name with Suggestions */}
+            <div style={{ position: 'relative' }} ref={suggestionBoxRef}>
               <label className={styles.label}>Customer Name</label>
               <input
                 type="text"
                 name="customerName"
                 value={formData.customerName}
-                onChange={handleChange}
+                onChange={handleCustomerNameChange}
                 required
                 className={styles.input}
+                autoComplete="off"
               />
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className={styles.suggestionList}>
+                  {suggestions.map((sug) => (
+                    <li
+                      key={sug._id}
+                      onClick={() => handleSuggestionSelect(sug)}
+                      className={styles.suggestionItem}
+                    >
+                      {sug.customerName}{' '}
+                      <span style={{ color: '#888', fontSize: '0.8rem' }}>
+                        ({sug.location})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div>
@@ -113,15 +207,23 @@ const handleSubmit = async (e) => {
 
             <div>
               <label className={styles.label}>Work Type</label>
-              <input
-                type="text"
+              <select
                 name="workType"
                 value={formData.workType}
                 onChange={handleChange}
                 required
-                className={styles.input}
-              />
-            </div>
+                className={styles.input} >
+                    <option value="Meet">Meet</option>
+                    <option value="Delivery">Delivery</option>
+                    <option value="Collect">Collect</option>
+                    <option value="Return">Return</option>
+                    <option value="Payment-Collect">Payment-Collect</option>
+                    <option value="Refund">Refund</option>
+                    <option value="Replacement">Replacement</option>
+                    <option value="New Client Visit">New Client Visit</option>
+                    <option value="For Service">For Service</option>
+            </select>
+          </div>
 
             <div>
               <label className={styles.label}>Reason</label>

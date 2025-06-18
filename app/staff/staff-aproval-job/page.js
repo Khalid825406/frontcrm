@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
-import '../approved-jobs/approval.css';
+import '../staff-aproval-job/staffaproval.css';
 
 export default function ApprovedJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -101,9 +101,9 @@ export default function ApprovedJobsPage() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      <Sidebar role="admin" />
+      <Sidebar role="staff" />
       <main className="main-container">
-        <Topbar username="Admin" />
+        <Topbar username="newstaf" />
         <div className="content-wrapper">
 
           <div className="filters">

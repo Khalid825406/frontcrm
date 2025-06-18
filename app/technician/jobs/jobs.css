@@ -28,6 +28,7 @@
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
 }
 
 .job-image {
@@ -113,4 +114,77 @@
 .modal-actions {
   display: flex;
   justify-content: space-between;
+}
+.job-card-enhanced {
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  height: 250px;
+}
+
+.job-card-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-right: 1px solid #e5e5e5;
+}
+
+.job-card-details {
+  padding: 20px;
+  flex: 1;
+}
+
+.job-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.job-card-details p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.job-status {
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.job-status.assigned { color: #ff9800; }
+.job-status.accepted { color: #2196f3; }
+.job-status.in\ progress { color: #673ab7; }
+.job-status.completed { color: #4caf50; }
+.job-status.rejected { color: #f44336; }
+
+.newtext{
+    width: 100%;
+    resize: none;
+    height: 76px;
+    margin: 10px 0px;
+    border-radius: 5px;
+    padding: 5px;
+    border-color: #ccc;
+}
+.gtbut{
+      background: green;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+.redbut{
+    background: red;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 8px;
 }

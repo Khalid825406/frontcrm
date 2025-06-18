@@ -36,9 +36,8 @@ const StatusTimeline = ({ timeline, job }) => {
         <div key={status} className="timeline-step-wrapper">
           <div className={`timeline-step ${getStatusClass(status)}`}>
             <div
-              className={`circle ${
-                getStatusClass(status) === 'completed' ? 'circle-active' : ''
-              } ${getStatusClass(status) === 'rejected' ? 'circle-rejected' : ''}`}
+              className={`circle ${getStatusClass(status) === 'completed' ? 'circle-active' : ''
+                } ${getStatusClass(status) === 'rejected' ? 'circle-rejected' : ''}`}
             >
               {getStatusClass(status) === 'completed' ? '✓' : ''}
               {getStatusClass(status) === 'rejected' ? '✕' : ''}
@@ -51,35 +50,35 @@ const StatusTimeline = ({ timeline, job }) => {
               <div className="reason">Reason: {getReason(status)}</div>
             )}
 
-           {status === 'In Progress' && job?.startWork && (
-  <div className="timeline-img-remarks">
-    {job.startWork.image && (
-    <img
-  src={job.startWork.image}
-  alt="Start Work"
-  className="timeline-img"
-/>
-    )}
-    {job.startWork.remark && ( // ✅ FIXED
-      <div><strong>Remark:</strong> {job.startWork.remark}</div>
-    )}
-  </div>
-)}
+            {status === 'In Progress' && job?.startWork && (
+              <div className="timeline-img-remarks">
+                {job.startWork.image && (
+                  <img
+                    src={job.startWork.image}
+                    alt="Start Work"
+                    className="timeline-img"
+                  />
+                )}
+                {job.startWork.remark && ( 
+                  <div><strong>Remark:</strong> {job.startWork.remark}</div>
+                )}
+              </div>
+            )}
 
-{status === 'Completed' && job?.completion && (
-  <div className="timeline-img-remarks">
-    {job.completion.image && (
-        <img
-  src={job.startWork.image}
-  alt="Start Work"
-  className="timeline-img"
-/>
-    )}
-    {job.completion.remark && ( // ✅ FIXED
-      <div><strong>Remark:</strong> {job.completion.remark}</div>
-    )}
-  </div>
-)}
+            {status === 'Completed' && job?.completion && (
+              <div className="timeline-img-remarks">
+                {job.completion.image && (
+                  <img
+                    src={job.startWork.image}
+                    alt="Start Work"
+                    className="timeline-img"
+                  />
+                )}
+                {job.completion.remark && ( // ✅ FIXED
+                  <div><strong>Remark:</strong> {job.completion.remark}</div>
+                )}
+              </div>
+            )}
 
           </div>
 

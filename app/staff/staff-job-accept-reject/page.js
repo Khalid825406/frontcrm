@@ -66,7 +66,7 @@ export default function PendingJobsPage() {
 
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
-      <Sidebar role="admin" />
+      <Sidebar role="staff" />
 
       <main
         style={{
@@ -79,8 +79,9 @@ export default function PendingJobsPage() {
           padding: '20px',
         }}
       >
-        <Topbar username="Admin" />
+        <Topbar username="newstaff" />
 
+        <h2 style={{ marginBottom: 20, marginTop: 60 }}>Pending Job Approvals</h2>
 
         <div
           style={{
@@ -89,7 +90,7 @@ export default function PendingJobsPage() {
             borderRadius: 10,
             boxShadow: '0 1px 5px rgba(0,0,0,0.1)',
             maxWidth: 1000,
-            margin: '60px auto',
+            margin: '0 auto',
           }}
         >
           {loading ? (

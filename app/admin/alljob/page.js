@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import '../alljob/all.css'
 
 export default function AllOtherJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -79,6 +80,7 @@ export default function AllOtherJobsPage() {
           padding: 20,
           overflowY: 'auto',
         }}
+        className='responvice'
       >
         <Topbar username="Admin" />
         <div style={{ maxWidth: 1400, margin: '60px auto' }}>

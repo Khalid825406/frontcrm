@@ -7,7 +7,8 @@ export default function AdminLayout({ children }) {
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
       <Sidebar role="admin" />
-      <main
+      <main 
+      className='newmyss'
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',

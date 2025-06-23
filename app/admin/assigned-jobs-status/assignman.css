@@ -1,0 +1,13 @@
+@media (max-width: 768px){
+.assignman {
+    margin-left: 0px !important;
+    padding: 0px !important;
+    flex-grow: 1;
+    margin-top: 40px;
+}
+.timeline-container{
+    width: 100%;
+}
+
+
+}

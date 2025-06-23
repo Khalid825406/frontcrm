@@ -1,0 +1,8 @@
+@media (max-width: 768px){
+    .maintech{
+        margin-left: 0px !important;
+    }
+    .newtech{
+        padding: 20px 12px !important;
+    }
+}

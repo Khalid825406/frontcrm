@@ -183,3 +183,24 @@
 .cancel-btn:hover {
   background-color: #dc2626;
 }
+
+@media (max-width: 768px){
+    .main-container{
+        margin-left: 0px ;
+    }
+    .filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 80px;
+}
+.card-container {
+ display: block;
+    padding: 0px;
+    margin-top: 15px;
+}
+.filters{
+  padding: 0px;
+}
+}

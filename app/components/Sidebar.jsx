@@ -1,7 +1,11 @@
+
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import '../components/AssignedJobs.css'
+import { useState } from 'react';
 import {
   LayoutDashboard,
   UserCheck,
@@ -10,17 +14,21 @@ import {
   CheckCircle2,
   Ban,
   Briefcase,
-  FileClock,
   FilePlus2,
   ListChecks,
   Hammer,
   Trophy,
   Workflow,
   CheckCheck,
+  Menu,
+  X,
 } from 'lucide-react';
 
 const Sidebar = ({ role }) => {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const linksByRole = {
     admin: [
@@ -33,83 +41,55 @@ const Sidebar = ({ role }) => {
       { href: '/admin/alljob', label: 'All Jobs', icon: Briefcase },
       { href: '/admin/assigned-jobs-status', label: 'Jobs Status', icon: Workflow },
       { href: '/admin/completed', label: 'Completed Jobs', icon: CheckCheck },
-      { href: '/admin/rejectbytechnician', label: 'Reject Jobs', icon: ListChecks },
+      { href: '/admin/rejectbytechnician', label: 'Reject By Technician Jobs', icon: ListChecks },
       { href: '/admin/achivment', label: 'Achievement', icon: Trophy },
     ],
     staff: [
       { href: '/staff/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/staff/jobscreatebyme', label: 'Jobs Created By Me', icon: ListChecks },
       { href: '/staff/staffnewcreatejob', label: 'New Create Job', icon: FilePlus2 },
-      { href: '/staff/staff-job-accept-reject', label: 'Aproval Pending Jobs', icon: ClipboardCheck },
-      { href: '/staff/staff-aproval-job', label: 'Aproval Jobs', icon: CheckCircle2 },
+      { href: '/staff/staff-job-accept-reject', label: 'Approval Pending Jobs', icon: ClipboardCheck },
+      { href: '/staff/staff-aproval-job', label: 'Approved Jobs', icon: CheckCircle2 },
       { href: '/staff/staff-check-status', label: 'Jobs Status', icon: Hammer },
       { href: '/staff/staff-completed', label: 'Completed Jobs', icon: CheckCheck },
-      { href: '/staff/staff-reject', label: 'Reject Jobs', icon: ListChecks },
+      { href: '/staff/staff-reject', label: 'Rejected Jobs', icon: ListChecks },
     ],
     technician: [
       { href: '/technician/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/technician/jobs', label: 'My Assigned Jobs', icon: Hammer },
       { href: '/technician/TechnicianCompleted', label: 'Completed Jobs', icon: CheckCheck },
-      { href: '/technician/TechnicianRejected', label: 'Reject Jobs', icon: ListChecks },
+      { href: '/technician/TechnicianRejected', label: 'Rejected Jobs', icon: ListChecks },
     ],
   };
 
   const links = linksByRole[role] || [];
 
   return (
-    <aside
-      style={{
-        width: 240,
-        backgroundColor: '#1f2937',
-        color: 'white',
-        height: '100vh',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '20px 10px',
-        overflowY: 'auto',
-        scrollbarWidth: 'thin',
-        scrollbarColor: '#9ca3af #1f2937',
-      }}
-    >
-      <h2
-        style={{
-          margin: '0 0 20px',
-          fontSize: 24,
-          fontWeight: 'bold',
-          textAlign: 'center',
-          color: '#ffffff',
-        }}
-      >
-        MyApp
-      </h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {links.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            style={{
-              padding: '10px 15px',
-              borderRadius: 6,
-              backgroundColor: pathname === href ? '#2563eb' : 'transparent',
-              textDecoration: 'none',
-              color: 'inherit',
-              fontWeight: pathname === href ? 'bold' : 'normal',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              transition: 'background-color 0.2s ease',
-            }}
-          >
-            {Icon && <Icon size={18} />}
-            <span>{label}</span>
-          </Link>
-        ))}
+    <>
+      {/* Toggle Button */}
+      <div className="sidebar-toggle">
+        <button onClick={toggleSidebar}>
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
-    </aside>
+
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <h2 className="sidebar-title">MyApp</h2>
+        <nav className="sidebar-links">
+          {links.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`sidebar-link ${pathname === href ? 'active' : ''}`}
+              onClick={() => setIsOpen(false)}
+            >
+              <Icon size={18} />
+              <span>{label}</span>
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 

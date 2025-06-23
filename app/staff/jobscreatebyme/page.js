@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import axios from 'axios';
+import '../jobscreatebyme/jobcreateby.css'
 
 const thStyle = { padding: '8px 12px', borderBottom: '1px solid #ddd', textAlign: 'left' };
 const tdStyle = { padding: '8px 12px', borderBottom: '1px solid #eee' };
@@ -65,6 +66,7 @@ export default function StaffJobsPage() {
     <div style={{ display: 'flex', height: '100vh' }}>
       <Sidebar role="staff" />
       <main
+      className='created'
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',

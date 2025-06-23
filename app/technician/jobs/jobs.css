@@ -188,3 +188,27 @@
     border-radius: 4px;
     margin-right: 8px;
 }
+@media (max-width: 768px){
+  .main{
+    margin-left: 0px;
+  }
+  .main-content {
+    padding: 80px 10px 30px;
+    overflow-y: auto;
+}
+.job-card-details {
+    padding: 0px;
+    flex: 1 1;
+}
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 76%;
+    max-width: 400px;
+}
+.newtext{
+  width: 96%;
+}
+
+}

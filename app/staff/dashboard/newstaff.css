@@ -1,0 +1,8 @@
+@media (max-width: 768px){
+    .newstas{
+        margin-left: 0px !important;
+    }
+    .newmseed{
+        padding: 20px 12px !important;
+    }
+}

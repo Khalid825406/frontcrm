@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import '../rejected-jobs/reject.css'
 
 export default function RejectedJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -32,7 +33,7 @@ export default function RejectedJobsPage() {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <Sidebar role="admin" />
-      <main style={{ flex: 1, backgroundColor: '#f9f9f9', marginLeft: 240, paddingTop: 60, padding: 20, overflowY: 'auto' }}>
+      <main className='mainrejede' style={{ flex: 1, backgroundColor: '#f9f9f9', marginLeft: 240, paddingTop: 60, padding: 20, overflowY: 'auto' }}>
         <Topbar username="Admin" />
         <div style={{ maxWidth: 1400, margin: '60px auto' }}>
           <h2 style={{ marginBottom: 20 }}>Rejected Jobs</h2>

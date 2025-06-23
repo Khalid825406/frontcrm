@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import '../dashboard/techdash.css'
 import { Hammer, Briefcase, CheckCircle2 } from 'lucide-react';
 
 export default function TechnicianDashboard() {
@@ -55,6 +56,7 @@ export default function TechnicianDashboard() {
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'Segoe UI, Tahoma, sans-serif' }}>
       <Sidebar role="technician" />
       <main
+      className='maintech'
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',
@@ -67,6 +69,8 @@ export default function TechnicianDashboard() {
         <Topbar username={username} />
 
         <div
+
+        className='newtech'
           style={{
             display: 'flex',
             gap: 20,

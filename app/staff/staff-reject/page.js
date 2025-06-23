@@ -5,6 +5,7 @@ import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatusTimeline from '../../components/StatusTimeline';
+import '../staff-reject/staff-rej.css'
 
 export default function AdminRejectedJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -37,7 +38,7 @@ export default function AdminRejectedJobsPage() {
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar role="staff" />
-      <main style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
+      <main className='created' style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
         <Topbar username="newstaff" />
         <h2>Rejected Jobs by Technician</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}

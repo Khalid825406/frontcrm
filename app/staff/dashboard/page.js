@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import '../dashboard/newstaff.css'
 import { Hammer , Briefcase, CheckCircle2 } from 'lucide-react';
 
 export default function StaffDashboard() {
@@ -50,6 +51,7 @@ export default function StaffDashboard() {
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'Segoe UI, Tahoma, sans-serif' }}>
       <Sidebar role="staff" />
       <main
+        className='newstas'
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',
@@ -62,6 +64,7 @@ export default function StaffDashboard() {
         <Topbar username={username} />
 
         <div
+        className='newmseed'
           style={{
             display: 'flex',
             gap: 20,

@@ -5,6 +5,7 @@ import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatusTimeline from '../../components/StatusTimeline';
+import '../assigned-jobs-status/assignman.css'
 
 export default function AdminActiveJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -37,7 +38,7 @@ export default function AdminActiveJobsPage() {
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar role="admin" />
-      <main style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
+      <main className='assignman' style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
         <Topbar username="Admin" />
         <h2>Active Assigned Jobs</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}

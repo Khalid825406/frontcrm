@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '@/app/components/Sidebar';
 import Topbar from '@/app/components/Topbar';
+import '../pending-job-approvals/PendingJobsPage.css'
 
 export default function PendingJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -69,6 +70,7 @@ export default function PendingJobsPage() {
       <Sidebar role="admin" />
 
       <main
+      className='masieed'
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',

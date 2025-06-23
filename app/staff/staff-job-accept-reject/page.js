@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '@/app/components/Sidebar';
 import Topbar from '@/app/components/Topbar';
+import '../staff-job-accept-reject/stafac.css'
 
 export default function PendingJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -69,6 +70,7 @@ export default function PendingJobsPage() {
       <Sidebar role="staff" />
 
       <main
+      className='created'
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',

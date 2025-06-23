@@ -41,7 +41,7 @@ const Sidebar = ({ role }) => {
       { href: '/admin/alljob', label: 'All Jobs', icon: Briefcase },
       { href: '/admin/assigned-jobs-status', label: 'Jobs Status', icon: Workflow },
       { href: '/admin/completed', label: 'Completed Jobs', icon: CheckCheck },
-      { href: '/admin/rejectbytechnician', label: 'Reject By Technician Jobs', icon: ListChecks },
+      { href: '/admin/rejectbytechnician', label: 'Technician Rejected', icon: ListChecks },
       { href: '/admin/achivment', label: 'Achievement', icon: Trophy },
     ],
     staff: [

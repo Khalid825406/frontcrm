@@ -5,9 +5,9 @@ import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatusTimeline from '../../components/StatusTimeline';
-import '../staff-check-status/status.css'
+import '../staff-check-status/status.css';
 
-export default function AdminActiveJobsPage() {
+export default function StaffActiveJobsPage() {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
 
@@ -23,6 +23,7 @@ export default function AdminActiveJobsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
+        console.log("📦 Staff Jobs Fetched:", res.data); // ✅ Debug line
         const activeJobs = res.data.filter((job) => {
           const latestStatus = job.statusTimeline[job.statusTimeline.length - 1]?.status;
           return latestStatus !== 'Completed' && latestStatus !== 'Rejected';
@@ -39,7 +40,7 @@ export default function AdminActiveJobsPage() {
     <div style={{ display: 'flex' }}>
       <Sidebar role="staff" />
       <main className='created' style={{ marginLeft: 240, padding: 20, flexGrow: 1, marginTop: 40 }}>
-        <Topbar username="newstaff" />
+        <Topbar username="Staff" />
         <h2>Active Assigned Jobs</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {jobs.length === 0 && !error && <p>No active jobs found.</p>}

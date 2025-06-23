@@ -55,7 +55,7 @@
   padding: 20px;
   border-radius: 10px;
   font-weight: bold;
-  width: 290px !important;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

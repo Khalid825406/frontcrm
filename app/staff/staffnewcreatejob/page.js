@@ -27,7 +27,7 @@ export default function NewCreateJobPage() {
   const suggestionBoxRef = useRef(null);
   const [username, setUsername] = useState('');
 
-  
+
 
   // Fetch suggestions
   const handleCustomerNameChange = async (e) => {
@@ -132,34 +132,34 @@ export default function NewCreateJobPage() {
     }
   };
 
-useEffect(() => {
-  const fetchUsername = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
-      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        const res = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      setUsername(res.data.name); // or res.data.username depending on response
-    } catch (error) {
-      console.error('Error fetching username:', error);
-    }
-  };
+        setUsername(res.data.name); // or res.data.username depending on response
+      } catch (error) {
+        console.error('Error fetching username:', error);
+      }
+    };
 
-  fetchUsername();
-}, []);
+    fetchUsername();
+  }, []);
 
-  
+
   return (
     <div className={styles.pageWrapper}>
       <Sidebar role="staff" />
 
       <div className={styles.mainContent}>
-       <Topbar username={username} />
+        <Topbar username={username} />
 
         <main className={styles.formWrapper}>
           <form onSubmit={handleSubmit} className={styles.formGrid}>
@@ -207,23 +207,27 @@ useEffect(() => {
 
             <div>
               <label className={styles.label}>Work Type</label>
-              <select
+              <input
+                list="workTypeOptions"
                 name="workType"
                 value={formData.workType}
                 onChange={handleChange}
                 required
-                className={styles.input} >
-                    <option value="Meet">Meet</option>
-                    <option value="Delivery">Delivery</option>
-                    <option value="Collect">Collect</option>
-                    <option value="Return">Return</option>
-                    <option value="Payment-Collect">Payment-Collect</option>
-                    <option value="Refund">Refund</option>
-                    <option value="Replacement">Replacement</option>
-                    <option value="New Client Visit">New Client Visit</option>
-                    <option value="For Service">For Service</option>
-            </select>
-          </div>
+                className={styles.input}
+                placeholder="Type or select"
+              />
+              <datalist id="workTypeOptions">
+                <option value="Meet" />
+                <option value="Delivery" />
+                <option value="Collect" />
+                <option value="Return" />
+                <option value="Payment-Collect" />
+                <option value="Refund" />
+                <option value="Replacement" />
+                <option value="New Client Visit" />
+                <option value="For Service" />
+              </datalist>
+            </div>
 
             <div>
               <label className={styles.label}>Reason</label>

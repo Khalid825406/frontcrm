@@ -178,25 +178,30 @@ export default function NewCreateJobPage() {
               />
             </div>
 
-            <div>
-              <label className={styles.label}>Work Type</label>
-              <select
-                name="workType"
-                value={formData.workType}
-                onChange={handleChange}
-                required
-                className={styles.input} >
-                    <option value="Meet">Meet</option>
-                    <option value="Delivery">Delivery</option>
-                    <option value="Collect">Collect</option>
-                    <option value="Return">Return</option>
-                    <option value="Payment-Collect">Payment-Collect</option>
-                    <option value="Refund">Refund</option>
-                    <option value="Replacement">Replacement</option>
-                    <option value="New Client Visit">New Client Visit</option>
-                    <option value="For Service">For Service</option>
-            </select>
-          </div>
+          <div>
+  <label className={styles.label}>Work Type</label>
+  <input
+    list="workTypeOptions"
+    name="workType"
+    value={formData.workType}
+    onChange={handleChange}
+    required
+    className={styles.input}
+    placeholder="Type or select"
+  />
+  <datalist id="workTypeOptions">
+    <option value="Meet" />
+    <option value="Delivery" />
+    <option value="Collect" />
+    <option value="Return" />
+    <option value="Payment-Collect" />
+    <option value="Refund" />
+    <option value="Replacement" />
+    <option value="New Client Visit" />
+    <option value="For Service" />
+  </datalist>
+</div>
+
 
             <div>
               <label className={styles.label}>Reason</label>

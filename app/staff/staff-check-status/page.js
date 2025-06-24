@@ -23,7 +23,6 @@ export default function StaffActiveJobsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        console.log("📦 Staff Jobs Fetched:", res.data); // ✅ Debug line
         const activeJobs = res.data.filter((job) => {
           const latestStatus = job.statusTimeline[job.statusTimeline.length - 1]?.status;
           return latestStatus !== 'Completed' && latestStatus !== 'Rejected';

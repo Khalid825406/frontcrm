@@ -49,6 +49,7 @@ const Sidebar = ({ role }) => {
       { href: '/staff/jobscreatebyme', label: 'Jobs Created By Me', icon: ListChecks },
       { href: '/staff/staffnewcreatejob', label: 'New Create Job', icon: FilePlus2 },
       { href: '/staff/staff-job-accept-reject', label: 'Approval Pending Jobs', icon: ClipboardCheck },
+      { href: '/staff/staff-assign-jobs', label: 'My Assigned Jobs', icon: Briefcase },
       { href: '/staff/staff-aproval-job', label: 'Approved Jobs', icon: CheckCircle2 },
       { href: '/staff/staff-check-status', label: 'Jobs Status', icon: Hammer },
       { href: '/staff/staff-completed', label: 'Completed Jobs', icon: CheckCheck },

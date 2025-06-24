@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
-import '../jobs/jobs.css';
+import '../staff-assign-jobs/new-assign.css';
 
 export default function TechnicianJobsPage() {
   const [user, setUser] = useState(null);
@@ -144,7 +144,7 @@ export default function TechnicianJobsPage() {
 
   return (
     <div className="layout">
-      <Sidebar role="technician" />
+      <Sidebar role="staff" />
       <div className="main">
         <Topbar username={user?.username || ''} />
         <div className="main-content">

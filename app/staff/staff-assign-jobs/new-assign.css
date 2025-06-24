@@ -1,0 +1,214 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 240px;
+}
+
+.main-content {
+  padding: 80px 30px 30px;
+  overflow-y: auto;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.job-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.job-image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.button-group {
+  margin-top: 15px;
+}
+
+.btn {
+  padding: 8px 14px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.accept-btn {
+  background-color: #28a745;
+}
+
+.reject-btn {
+  background-color: #dc3545;
+}
+
+.progress-btn {
+  background-color: #ffc107;
+  color: black;
+}
+
+.complete-btn {
+  background-color: #007bff;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.submit-btn{
+  background-color: #28a745;
+}
+.cancel-btn{
+  background-color: red;
+}
+.modal-textarea {
+  width: 92%;
+  height: 80px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: none;
+  margin-top: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.job-card-enhanced {
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  height: 250px;
+}
+
+.job-card-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-right: 1px solid #e5e5e5;
+}
+
+.job-card-details {
+  padding: 20px;
+  flex: 1;
+}
+
+.job-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.job-card-details p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.job-status {
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.job-status.assigned { color: #ff9800; }
+.job-status.accepted { color: #2196f3; }
+.job-status.in\ progress { color: #673ab7; }
+.job-status.completed { color: #4caf50; }
+.job-status.rejected { color: #f44336; }
+
+.newtext{
+    width: 100%;
+    resize: none;
+    height: 76px;
+    margin: 10px 0px;
+    border-radius: 5px;
+    padding: 5px;
+    border-color: #ccc;
+}
+.gtbut{
+      background: green;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+.redbut{
+    background: red;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+@media (max-width: 768px){
+  .main{
+    margin-left: 0px;
+  }
+  .main-content {
+    padding: 80px 10px 30px;
+    overflow-y: auto;
+}
+.job-card-details {
+    padding: 0px;
+    flex: 1 1;
+}
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 76%;
+    max-width: 400px;
+}
+.newtext{
+  width: 96%;
+}
+
+}

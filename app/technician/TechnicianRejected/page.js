@@ -64,6 +64,7 @@ export default function TechnicianRejectedJobsPage() {
                     <h3 className="job-title">Customer Name : {job.customerName}</h3>
                     <p><strong>📞 Phone:</strong> {job.customerPhone}</p>
                     <p><strong>🔧 Work Type:</strong> {job.workType}</p>
+                    <p><strong>🏢 Department:</strong> {job.Department}</p>
                     <p><strong>📝 Reason:</strong> {job.reason}</p>
                     <p><strong>📅 Date/Time:</strong> {new Date(job.datetime).toLocaleString()}</p>
                     <p><strong>📍 Location:</strong> {job.location}</p>

@@ -56,6 +56,7 @@ export default function StaffActiveJobsPage() {
               <h4>Customer Name: {j.customerName}</h4>
               <p>Number: {j.customerPhone}</p>
               <p>Work Type: {j.workType}</p>
+              <p> Department: {j.Department}</p>
               <p>Reason: {j.reason}</p>
               <p>Date & Time: {new Date(j.datetime).toLocaleString()}</p>
               <p>Location: {j.location}</p>

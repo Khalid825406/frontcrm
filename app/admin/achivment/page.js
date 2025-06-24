@@ -26,7 +26,7 @@ export default function TechnicianLeaderboard() {
       <div className="content-wrapper">
         <Topbar username="admin" />
         <div className="leaderboard-container">
-          <h1 className="leaderboard-heading">🏆 Technician Leaderboard</h1>
+          <h1 className="leaderboard-heading">🏆 Leaderboard</h1>
 
           <div className="leaderboard-table-wrapper">
             <table className="leaderboard-table">
@@ -43,7 +43,7 @@ export default function TechnicianLeaderboard() {
               </thead>
               <tbody>
             {achievements.map((tech, index) => (
-                <tr key={tech.technicianId} className={`leaderboard-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
+                <tr key={tech.technicianId?.toString() || index} className={`leaderboard-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
                 <td className="rank">
                     {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                 </td>

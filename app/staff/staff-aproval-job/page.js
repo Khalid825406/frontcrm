@@ -24,26 +24,29 @@ export default function ApprovedJobsPage() {
     filterJobs();
   }, [searchTerm, priorityFilter, jobs]);
 
-  const fetchApprovedJobs = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+ const fetchApprovedJobs = async () => {
+  const token = localStorage.getItem('token');
+  try {
+    const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      const approved = res.data.filter((job) => {
-        const isRejected = job.statusTimeline?.some((s) => s.status === 'Rejected');
-        return job.approved && !job.rejected && (!job.assignedTo || isRejected);
-      });
+    const approved = res.data.filter((job) => {
+      const timeline = job.statusTimeline || [];
+      const lastStatus = timeline.length > 0 ? timeline[timeline.length - 1].status : null;
 
-      setJobs(approved);
-    } catch (err) {
-      console.error(err);
-      alert('❌ Failed to fetch approved jobs');
-    } finally {
-      setLoading(false);
-    }
-  };
+      return job.approved && !job.rejected && (!job.assignedTo || lastStatus === 'Rejected');
+    });
+
+    setJobs(approved);
+  } catch (err) {
+    console.error(err);
+    alert('❌ Failed to fetch approved jobs');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const filterJobs = () => {
     const filtered = jobs.filter((job) => {
@@ -89,7 +92,7 @@ export default function ApprovedJobsPage() {
         { jobId: selectedJobId, technicianId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('✅ Technician assigned successfully');
+      alert('Assigned successfully');
       setShowModal(false);
       setSearchTerm('');
       fetchApprovedJobs();
@@ -197,6 +200,7 @@ function JobCards({ jobs, loading, onAssign }) {
               <h3>Customer Name : {job.customerName}</h3>
               <p><strong>Phone:</strong> {job.customerPhone}</p>
               <p><strong>Work Type:</strong> {job.workType}</p>
+              <p><strong>Department:</strong> {job.Department}</p>
               <p><strong>Location:</strong> {job.location}</p>
               <p><strong>Date/Time:</strong> {new Date(job.datetime).toLocaleString()}</p>
               <p><strong>Reason:</strong> {job.reason}</p>

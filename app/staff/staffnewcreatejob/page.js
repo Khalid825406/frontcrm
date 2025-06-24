@@ -13,6 +13,7 @@ export default function NewCreateJobPage() {
     customerName: '',
     customerPhone: '',
     workType: '',
+    Department: '',
     reason: '',
     datetime: '',
     location: '',
@@ -58,6 +59,7 @@ export default function NewCreateJobPage() {
       customerName: job.customerName,
       customerPhone: job.customerPhone || '',
       workType: job.workType || '',
+      Department:job.Department || '',
       reason: job.reason || '',
       datetime: job.datetime ? job.datetime.slice(0, 16) : '',
       location: job.location || '',
@@ -117,6 +119,7 @@ export default function NewCreateJobPage() {
         customerName: '',
         customerPhone: '',
         workType: '',
+        Department:'',
         reason: '',
         datetime: '',
         location: '',
@@ -289,6 +292,25 @@ export default function NewCreateJobPage() {
                 onChange={handleFileChange}
                 className={styles.input}
               />
+            </div>
+
+             <div>
+              <label className={styles.label}>Department</label>
+              <input
+                list="Department"
+                name="Department"
+                value={formData.Department}
+                onChange={handleChange}
+                required
+                className={styles.input}
+                placeholder="Choose the Department"
+              />
+              <datalist id="Department">
+                <option value="Accounts" />
+                <option value="Purchase" />
+                <option value=" Ware house" />
+                <option value="Head Office" />
+              </datalist>
             </div>
 
             <div className={styles.fullWidth}>

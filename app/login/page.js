@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -99,6 +100,13 @@ export default function LoginPage() {
           text-align: center;
           font-weight: 600;
         }
+          .mana{
+            color: #736767;
+          }
+            .mana a{
+            color:blue;
+            text-decoration:none;
+            }
       `}</style>
 
       <div className="container">
@@ -125,6 +133,10 @@ export default function LoginPage() {
           </button>
         </form>
         {error && <p className="error">{error}</p>}
+         <p className="mana">
+          Don’t have an account?{" "}
+          <Link href="/register" >Register</Link>
+        </p>
       </div>
     </>
   );

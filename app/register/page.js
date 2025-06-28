@@ -252,6 +252,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -338,7 +339,10 @@ export default function RegisterPage() {
           Register
         </button>
       </form>
-
+         <p className="text-center mt-4">
+          Already have an account?{" "}
+          <Link href="/login" className="text-blue-600 font-semibold">Login</Link>
+        </p>
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}
 

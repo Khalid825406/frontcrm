@@ -6,7 +6,6 @@ const withPWA = require('next-pwa')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Your custom config here (optional)
   reactStrictMode: true,
 };
 

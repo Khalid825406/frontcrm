@@ -87,8 +87,7 @@ export default function ApprovedJobsPage() {
   const handleAssignTechnician = async (technicianId) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.post(
-        'https://new-crm-sdcn.onrender.com/api/admin/assign-job',
+      await axios.post('https://new-crm-sdcn.onrender.com/api/admin/assign-job',
         { jobId: selectedJobId, technicianId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

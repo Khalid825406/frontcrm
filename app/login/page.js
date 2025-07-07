@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
+import { requestForToken } from '../firebase-messaging'; 
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,6 +30,10 @@ export default function LoginPage() {
       const role = decoded.role;
 
       localStorage.setItem('token', token);
+
+      // 🔔 Send FCM Token to backend
+      await requestForToken();
+
 
       if (role === 'admin') router.push('/admin/dashboard');
       else if (role === 'staff') router.push('/staff/dashboard');

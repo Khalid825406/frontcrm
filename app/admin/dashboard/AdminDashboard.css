@@ -55,12 +55,15 @@
   padding: 20px;
   border-radius: 10px;
   font-weight: bold;
-  width: 100%;
+  width: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.dashboard-link{
+  width: 100%;
 }
 }
 

@@ -5,6 +5,9 @@
     .newmseed{
         padding: 20px 12px !important;
     }
+    .dashboard-link{
+        width: 100%;
+    }
 }
 .dashboard-link {
   text-decoration: none !important;

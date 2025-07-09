@@ -5,6 +5,7 @@ import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import '../approved-jobs/approval.css';
+import { X } from 'lucide-react';
 
 export default function ApprovedJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -161,12 +162,14 @@ export default function ApprovedJobsPage() {
                         <button className="assign-btn" onClick={() => handleAssignTechnician(tech._id)}>
                           Assign
                         </button>
-                        <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                          Cancel
-                        </button>
+                       
                       </div>
+                    
                     </li>
                   ))}
+                     <button className="cancel-btn" onClick={() => setShowModal(false)}>
+                          <X />
+                        </button>
               </ul>
             </div>
           </div>

@@ -90,16 +90,14 @@ export default function StaffJobsPage() {
           >
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
               <thead>
-                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                <tr style={{  background: '#2563eb', color:' #fff'}}>
                   <th style={thStyle}>Customer</th>
                   <th style={thStyle}>Phone</th>
                   <th style={thStyle}>Work Type</th>
                   <th style={thStyle}>Reason</th>
-                  <th style={thStyle}>Date/Time</th>
                   <th style={thStyle}>Location</th>
                   <th style={thStyle}>Priority</th>
                   <th style={thStyle}>Remarks</th>
-                  <th style={thStyle}>Images</th>
                   <th style={thStyle}>Status</th>
                   <th style={thStyle}>Created At</th>
                 </tr>
@@ -118,15 +116,9 @@ export default function StaffJobsPage() {
                       <td style={tdStyle}>{job.customerPhone}</td>
                       <td style={tdStyle}>{job.workType}</td>
                       <td style={tdStyle}>{job.reason}</td>
-                      <td style={tdStyle}>{new Date(job.datetime).toLocaleString()}</td>
                       <td style={tdStyle}>{job.location}</td>
                       <td style={tdStyle}>{job.priority}</td>
                       <td style={tdStyle}>{job.remarks}</td>
-                      <td style={tdStyle}>
-                        {Array.isArray(job.images) && job.images.length > 0
-                          ? `${job.images.length} image(s)`
-                          : 'No images'}
-                      </td>
                       <td
                         style={{
                           ...tdStyle,
@@ -134,9 +126,9 @@ export default function StaffJobsPage() {
                           fontWeight: 600,
                         }}
                       >
-                        {getStatus(job)}
+                       <span className='mystay'>{getStatus(job)}</span> 
                       </td>
-                      <td style={tdStyle}>{new Date(job.createdAt).toLocaleString()}</td>
+                      <td style={tdStyle}> {new Date(job.createdAt).toLocaleDateString()}</td>
                     </tr>
                   ))
                 )}

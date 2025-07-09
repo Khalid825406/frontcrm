@@ -12,3 +12,7 @@
     font-weight: 600;
     text-align: center;
 }
+.back-border{
+     background-color: #fbfafa;
+    border-bottom: 1px solid #fff;
+}

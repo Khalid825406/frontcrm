@@ -12,6 +12,7 @@ export default function AllOtherJobsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedJobIds, setSelectedJobIds] = useState([]);
   const jobsPerPage = 10;
 
   useEffect(() => {
@@ -60,6 +61,48 @@ export default function AllOtherJobsPage() {
     }
   }
 
+  async function handleDeleteSelected() {
+    if (selectedJobIds.length === 0) {
+      alert('No jobs selected');
+      return;
+    }
+
+    const confirmDelete = window.confirm(`Delete ${selectedJobIds.length} selected job(s)?`);
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem('token');
+    try {
+      for (const jobId of selectedJobIds) {
+        await axios.delete(`https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      alert('Selected jobs deleted');
+      setSelectedJobIds([]);
+      fetchJobs();
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting selected jobs');
+    }
+  }
+
+  function toggleJobSelection(jobId) {
+    setSelectedJobIds((prevSelected) =>
+      prevSelected.includes(jobId)
+        ? prevSelected.filter((id) => id !== jobId)
+        : [...prevSelected, jobId]
+    );
+  }
+
+  function toggleSelectAll() {
+    const visibleJobIds = currentJobs.map((job) => job._id);
+    const allSelected = visibleJobIds.every((id) => selectedJobIds.includes(id));
+
+    setSelectedJobIds(allSelected ? [] : visibleJobIds);
+  }
+
   function getStatus(job) {
     if (job.approved) return 'Approved';
     if (job.rejected) return 'Rejected';
@@ -72,7 +115,6 @@ export default function AllOtherJobsPage() {
     return '#ff9800';
   }
 
-  // 🔍 Filtered jobs
   const filteredJobs = jobs.filter((job) => {
     const status = getStatus(job).toLowerCase();
     const query = searchQuery.toLowerCase();
@@ -88,7 +130,6 @@ export default function AllOtherJobsPage() {
     return matchesSearch && matchesStatus;
   });
 
-  // 📄 Pagination Logic
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -109,7 +150,7 @@ export default function AllOtherJobsPage() {
         className="responvice"
       >
         <Topbar username="Admin" />
-        <div style={{ maxWidth: 1400, margin: '60px auto' }}>
+        <div style={{ width: '100%', margin: '60px auto' }}>
           <div
             style={{
               backgroundColor: 'white',
@@ -120,14 +161,14 @@ export default function AllOtherJobsPage() {
             }}
           >
             {/* 🔍 Search + Filter Bar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+            <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
               <input
                 type="text"
                 placeholder="Search by name, phone, work type, location..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  setCurrentPage(1); // reset to page 1 on new search
+                  setCurrentPage(1);
                 }}
                 style={{
                   padding: 8,
@@ -140,7 +181,7 @@ export default function AllOtherJobsPage() {
                 value={statusFilter}
                 onChange={(e) => {
                   setStatusFilter(e.target.value);
-                  setCurrentPage(1); // reset to page 1 on new filter
+                  setCurrentPage(1);
                 }}
                 style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
               >
@@ -151,6 +192,23 @@ export default function AllOtherJobsPage() {
               </select>
             </div>
 
+            {/* ✅ Delete Selected Button */}
+            <button
+              onClick={handleDeleteSelected}
+              disabled={selectedJobIds.length === 0}
+              style={{
+                marginBottom: 10,
+                padding: '8px 16px',
+                backgroundColor: '#f44336',
+                color: 'white',
+                border: 'none',
+                borderRadius: 4,
+                cursor: selectedJobIds.length === 0 ? 'not-allowed' : 'pointer'
+              }}
+            >
+              Delete Selected ({selectedJobIds.length})
+            </button>
+
             {loading ? (
               <p style={{ padding: 20 }}>Loading jobs...</p>
             ) : (
@@ -158,6 +216,16 @@ export default function AllOtherJobsPage() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
                   <thead>
                     <tr style={{ backgroundColor: '#293ace' }}>
+                      <th style={thStyle}>
+                        <input
+                          type="checkbox"
+                          checked={
+                            currentJobs.length > 0 &&
+                            currentJobs.every((job) => selectedJobIds.includes(job._id))
+                          }
+                          onChange={toggleSelectAll}
+                        />
+                      </th>
                       <th style={thStyle}>Customer</th>
                       <th style={thStyle}>Phone</th>
                       <th style={thStyle}>Work Type</th>
@@ -167,7 +235,6 @@ export default function AllOtherJobsPage() {
                       <th style={thStyle}>Priority</th>
                       <th style={thStyle}>Remarks</th>
                       <th style={thStyle}>Created By</th>
-                      <th style={thStyle}>Images</th>
                       <th style={thStyle}>Status</th>
                       <th style={thStyle}>Created At</th>
                       <th style={thStyle}>Action</th>
@@ -182,7 +249,14 @@ export default function AllOtherJobsPage() {
                       </tr>
                     ) : (
                       currentJobs.map((job) => (
-                        <tr key={job._id}>
+                        <tr key={job._id} className='back-border'>
+                          <td style={tdStyle}>
+                            <input
+                              type="checkbox"
+                              checked={selectedJobIds.includes(job._id)}
+                              onChange={() => toggleJobSelection(job._id)}
+                            />
+                          </td>
                           <td style={tdStyle}>{job.customerName}</td>
                           <td style={tdStyle}>{job.customerPhone}</td>
                           <td style={tdStyle}>{job.workType}</td>
@@ -196,11 +270,6 @@ export default function AllOtherJobsPage() {
                               ? `${job.createdBy.username} (${job.createdBy.role})`
                               : 'N/A'}
                           </td>
-                          <td style={tdStyle}>
-                            {Array.isArray(job.images) && job.images.length > 0
-                              ? `${job.images.length} image(s)`
-                              : 'No images'}
-                          </td>
                           <td
                             style={{
                               ...tdStyle,
@@ -210,17 +279,18 @@ export default function AllOtherJobsPage() {
                           >
                             <span className='mystay'>{getStatus(job)}</span>
                           </td>
-                          <td style={tdStyle}>{new Date(job.createdAt).toLocaleString()}</td>
+                          <td style={tdStyle}>
+                            {new Date(job.createdAt).toLocaleDateString()}
+                          </td>
                           <td style={tdStyle}>
                             <button
                               onClick={() => handleDelete(job._id)}
                               style={{
-                                backgroundColor: '#f44336',
-                                color: 'white',
+                                backgroundColor: 'transparent',
+                                color: 'red',
                                 border: 'none',
-                                padding: '6px 10px',
                                 cursor: 'pointer',
-                                borderRadius: 4,
+                                outline : 'none'
                               }}
                             >
                               Delete

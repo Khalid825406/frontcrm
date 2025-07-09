@@ -7,6 +7,7 @@ import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import '../dashboard/techdash.css'
 import { Hammer, Briefcase, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function TechnicianDashboard() {
   const router = useRouter();
@@ -80,29 +81,31 @@ export default function TechnicianDashboard() {
           }}
         >
           {/* Active Jobs */}
-          <div
-            style={{
-              flex: 1,
-              backgroundColor: '#10b981',
-              padding: 20,
-              borderRadius: 10,
-              color: '#fff',
-              fontWeight: 'bold',
-              minWidth: 250,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-            }}
-          >
-            <div>
-              <div style={{ fontSize: 50 }}>{activeJobs.length}</div>
-              <div>My Assigned Jobs</div>
+          <Link href="/technician/jobs" className='dashboard-link'>
+            <div
+              style={{
+                flex: 1,
+                backgroundColor: '#10b981',
+                padding: 20,
+                borderRadius: 10,
+                color: '#fff',
+                fontWeight: 'bold',
+                minWidth: 250,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 50 }}>{activeJobs.length}</div>
+                <div>My Assigned Jobs</div>
+              </div>
+              <Hammer size={50} />
             </div>
-            <Hammer size={50} />
-          </div>
-
+         </Link>
           {/* Total Jobs */}
+          <Link href="/technician/dashboard" className='dashboard-link'>
           <div
             style={{
               flex: 1,
@@ -124,8 +127,9 @@ export default function TechnicianDashboard() {
             </div>
             <Briefcase size={50} />
           </div>
-
+        </Link>
           {/* Completed Jobs */}
+          <Link href="/technician/TechnicianCompleted" className='dashboard-link'>
           <div
             style={{
               flex: 1,
@@ -147,6 +151,7 @@ export default function TechnicianDashboard() {
             </div>
             <CheckCircle2 size={50} />
           </div>
+          </Link>
         </div>
       </main>
     </div>

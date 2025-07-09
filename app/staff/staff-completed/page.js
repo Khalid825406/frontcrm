@@ -42,6 +42,7 @@ export default function AdminCompletedJobsPage() {
         <h2>Completed Jobs</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {jobs.length === 0 && !error && <p>No completed jobs found.</p>}
+        <div className='meicsdasw'>
         {jobs.map((j) => (
           <div
             key={j._id}
@@ -50,22 +51,62 @@ export default function AdminCompletedJobsPage() {
           >
             <div>
               {j.images && j.images[0] && (
-                <img src={j.images[0]} alt="Job" style={{ width: '100%', height: 300 }} />
+                <img
+                  src={j.images[0]}
+                  alt="Job"
+                  style={{ width: '100%', height: 250, borderRadius: '10px 10px 0px 0px' }}
+                />
               )}
-              <h4>Customer Name: {j.customerName}</h4>
-              <p>Number: {j.customerPhone}</p>
-              <p>Work Type: {j.workType}</p>
-              <p>Department: {j.Department}</p>
-              <p>Reason: {j.reason}</p>
-              <p>Date & Time: {new Date(j.datetime).toLocaleString()}</p>
-              <p>Location: {j.location}</p>
-              <p>Priority: {j.priority}</p>
-              <p>Remark: {j.remarks}</p>
-              <p><strong>Assigned To:</strong> {j.assignedTo?.username || 'Unassigned'}</p>
+              <div className="mainsdflrx">
+                <div className="maieerrdds">
+                  <div className="info-block">
+                    <div className="info-label">Customer Name</div>
+                    <div className="info-value">{j.customerName}</div>
+                  </div>
+                  <div className="info-block">
+                    <div className="info-label">Number</div>
+                    <div className="info-value">{j.customerPhone}</div>
+                  </div>
+                  <div className="info-block">
+                    <div className="info-label">Work Type</div>
+                    <div className="info-value">{j.workType}</div>
+                  </div>
+                  <div className="info-block">
+                    <div className="info-label">Department</div>
+                    <div className="info-value">{j.Department}</div>
+                  </div>
+                </div>
+                <div className="maieerrdds">
+                  <div className="info-block">
+                    <div className="info-label">Location</div>
+                    <div className="info-value">{j.location}</div>
+                  </div>
+                  <div className="info-block">
+                    <div className="info-label">Priority</div>
+                    <div className="info-value">{j.priority}</div>
+                  </div>
+                  <div className="info-block">
+                    <div className="info-label">Reason</div>
+                    <div className="info-value">{j.reason}</div>
+                  </div>
+                  <div className="info-block">
+                    <div className="info-label">Assigned To</div>
+                    <div className="info-value">{j.assignedTo?.username || 'Unassigned'}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="info-block">
+                <div className="info-label">Date & Time</div>
+                <div className="info-value">{new Date(j.datetime).toLocaleString()}</div>
+              </div>
+
+              <div className="remark-box">📌 Remark: {j.remarks}</div>
             </div>
             <StatusTimeline timeline={j.statusTimeline} job={j} />
           </div>
         ))}
+        </div>
         <Topbar username="newstaff" />
       </main>
     </div>

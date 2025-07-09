@@ -6,3 +6,11 @@
         padding: 20px 12px !important;
     }
 }
+.dashboard-link {
+  text-decoration: none !important;
+  display: block;
+  transition: transform 0.2s ease;
+}
+.dashboard-link:hover {
+  transform: scale(1.02);
+}

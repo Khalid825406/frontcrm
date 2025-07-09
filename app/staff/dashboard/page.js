@@ -7,6 +7,7 @@ import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import '../dashboard/newstaff.css'
 import { Hammer , Briefcase, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -42,7 +43,11 @@ export default function StaffDashboard() {
     fetchData();
   }, [router]);
 
-  const completedJobs = jobs.filter(j => j.status === 'Completed');
+  const completedJobs = jobs.filter(
+  (j) =>
+    j.status === 'Completed' &&
+    j.assignedTo?.role === 'staff'
+  );
   const assignedOrInProgressJobs = jobs.filter(j => j.status === 'Accepted' || j.status === 'In Progress');
 
   if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
@@ -74,6 +79,8 @@ export default function StaffDashboard() {
           }}
         >
           {/* Jobs Status */}
+
+          <Link href="/staff/staff-check-status" className="dashboard-link">
           <div
             style={{
               flex: 1,
@@ -95,8 +102,9 @@ export default function StaffDashboard() {
             </div>
             <Hammer  size={50} />
           </div>
-
+          </Link>
           {/* Total Jobs */}
+          <Link href="/staff/dashboard" className="dashboard-link">
           <div
             style={{
               flex: 1,
@@ -118,8 +126,9 @@ export default function StaffDashboard() {
             </div>
             <Briefcase size={50} />
           </div>
-
+          </Link>
           {/* Completed Jobs */}
+          <Link href="/staff/staff-completed" className="dashboard-link">
           <div
             style={{
               flex: 1,
@@ -137,10 +146,11 @@ export default function StaffDashboard() {
           >
             <div>
               <div style={{ fontSize: 50 }}>{completedJobs.length}</div>
-              <div>Completed Jobs</div>
+              <div>My Completed Jobs</div>
             </div>
             <CheckCircle2 size={50} />
           </div>
+          </Link>
         </div>
       </main>
     </div>

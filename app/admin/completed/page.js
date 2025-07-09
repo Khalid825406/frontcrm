@@ -61,16 +61,12 @@ export default function AdminCompletedJobsPage() {
           padding: 20,
           flexGrow: 1,
           marginTop: 40,
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: '20px',
         }}
       >
         <Topbar username="Admin" />
 
         {/* 🔍 Search & Date Filter */}
-        <div style={{ width: '100%', maxWidth: 1000, marginBottom: 20, display: 'flex', gap: 12, marginTop:20 }}>
+        <div className='search-box'  style={{ width: '100%', maxWidth: 1000, display: 'flex', gap: 12, margin: '12px auto', background:'rgb(247, 248, 249)', padding:12, borderRadius:5,}}>
           <input
             type="text"
             placeholder="Search by customer, phone, work type, location..."
@@ -100,6 +96,7 @@ export default function AdminCompletedJobsPage() {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {filteredJobs.length === 0 && !error && <p>No completed jobs found.</p>}
 
+            <div className='meicsdasw'>
         {filteredJobs.map((j) => (
           <div
             key={j._id}
@@ -171,6 +168,7 @@ export default function AdminCompletedJobsPage() {
             <StatusTimeline timeline={j.statusTimeline} job={j} />
           </div>
         ))}
+           </div>
       </main>
     </div>
   );

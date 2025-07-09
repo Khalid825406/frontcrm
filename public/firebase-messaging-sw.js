@@ -14,12 +14,13 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// ✅ Handle Background Messages
+// ✅ Handle background FCM messages manually
 messaging.onBackgroundMessage((payload) => {
   console.log("📩 Background message received:", payload);
 
-  const { title, body } = payload.notification;
-  const click_action = payload.data?.click_action || '/';
+  const title = payload.data?.title || "New Notification";
+  const body = payload.data?.body || "";
+  const click_action = payload.data?.click_action || 'https://www.sultanmedical-crm.com/';
 
   self.registration.showNotification(title, {
     body,
@@ -28,9 +29,9 @@ messaging.onBackgroundMessage((payload) => {
   });
 });
 
-// ✅ On Notification Click
+// ✅ On notification click
 self.addEventListener('notificationclick', function (event) {
-  const click_action = event.notification.data?.click_action || 'https://www.sultanmedical-crm.com/technician/dashboard';
+  const click_action = event.notification.data?.click_action || 'https://www.sultanmedical-crm.com/';
   event.notification.close();
 
   event.waitUntil(

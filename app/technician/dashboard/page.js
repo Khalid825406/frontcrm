@@ -8,6 +8,8 @@ import Topbar from '../../components/Topbar';
 import '../dashboard/techdash.css'
 import { Hammer, Briefcase, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { requestForToken } from '../../firebase-messaging';
+
 
 export default function TechnicianDashboard() {
   const router = useRouter();
@@ -19,8 +21,12 @@ export default function TechnicianDashboard() {
     const token = localStorage.getItem('token');
     if (!token) return router.push('/login');
 
+    
+
     const fetchData = async () => {
       try {
+        
+         await requestForToken(); 
         // Fetch technician profile
         const resUser = await axios.get('https://new-crm-sdcn.onrender.com/api/user/dashboard', {
           headers: { Authorization: `Bearer ${token}` },

@@ -20,7 +20,7 @@ messaging.onBackgroundMessage((payload) => {
 
   const title = payload.data?.title || "New Notification";
   const body = payload.data?.body || "";
-  const click_action = payload.data?.click_action || 'https://www.sultanmedical-crm.com/';
+  const click_action = payload.data?.click_action || '/';
 
   self.registration.showNotification(title, {
     body,
@@ -31,7 +31,7 @@ messaging.onBackgroundMessage((payload) => {
 
 // ✅ Notification click handler
 self.addEventListener('notificationclick', function (event) {
-  const click_action = event.notification.data?.click_action || 'https://www.sultanmedical-crm.com/';
+  const click_action = event.notification.data?.click_action || '/';
   event.notification.close();
 
   event.waitUntil(

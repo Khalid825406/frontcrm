@@ -1,22 +1,17 @@
 'use client';
 import Image from 'next/image';
-
 import LoginPage from "./login/page";
 
-
 export default function Home() {
-  const handleDownload = () => {
-    const apkURL = "https://www.dropbox.com/scl/fi/uwue8vx7qumz0cf231pp1/SultanCRM.apk?rlkey=cr578r8hge2pihpz75dmw5tp3&st=uvx7wde1&dl=1 ";
-    window.open(apkURL, "_blank");
-  };
 
   return (
     <>
       <LoginPage />
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
-        <button
-          onClick={handleDownload}
+        <a
+          href="/SultanCRM.apk"
+          download
           style={{
             padding: "14px 28px",
             background: "linear-gradient(135deg, #00b894, #0984e3)",
@@ -32,18 +27,19 @@ export default function Home() {
             gap: "12px",
             transition: "transform 0.2s ease-in-out",
           }}
-          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
-          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-           <Image
-            src="/android.png" // ✅ must be in /public folder
+          <Image
+            src="/android.png" // ✅ Image must be in /public folder
             alt="android"
             width={24}
             height={24}
-          /> Download Android App
-          
-        </button>
+          />
+          Download Android App
+        </a>
       </div>
+
     </>
   );
 }

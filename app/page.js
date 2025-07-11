@@ -26,6 +26,7 @@ export default function Home() {
             alignItems: "center",
             gap: "12px",
             transition: "transform 0.2s ease-in-out",
+            textDecoration:'none'
           }}
           onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}

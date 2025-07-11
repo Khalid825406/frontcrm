@@ -1,0 +1,97 @@
+/* public/login/login.css or /styles/login.css (depends on path) */
+
+.container {
+  max-width: 380px;
+  margin: 70px auto;
+  padding: 30px 25px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #222;
+  font-weight: 700;
+  font-size: 28px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  font-size: 16px;
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.password-wrapper {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 40%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}
+
+input:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 6px rgba(0, 112, 243, 0.3);
+}
+
+button {
+  background-color: #0070f3;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #005bb5;
+}
+
+.error {
+  color: #d32f2f;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #736767;
+}
+
+.links a {
+  color: #0070f3;
+  text-decoration: none;
+}

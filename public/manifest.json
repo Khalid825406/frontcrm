@@ -3,7 +3,9 @@
   "short_name": "SultanCRM",
   "description": "A CRM system for Sultan Medical services",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#0275d8",
   "icons": [

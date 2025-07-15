@@ -276,7 +276,7 @@ export default function RegisterPage() {
     setSuccess('');
 
     try {
-      const formattedPhone = `+91${form.phone}`;
+      const formattedPhone = `+968${form.phone}`;
       const res = await axios.post('https://new-crm-sdcn.onrender.com/api/auth/register', {
         username: form.username,
         password: form.password,

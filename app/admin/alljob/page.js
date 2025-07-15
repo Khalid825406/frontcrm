@@ -128,7 +128,8 @@ export default function AllOtherJobsPage() {
     const matchesStatus = !statusFilter || status === statusFilter.toLowerCase();
 
     return matchesSearch && matchesStatus;
-  });
+  }) 
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
@@ -264,7 +265,9 @@ export default function AllOtherJobsPage() {
                           <td style={tdStyle}>{new Date(job.datetime).toLocaleString()}</td>
                           <td style={tdStyle}>{job.location}</td>
                           <td style={tdStyle}>{job.priority}</td>
-                          <td style={tdStyle}>{job.remarks}</td>
+                          <td style={tdStyle} title={job.remarks}>
+                            {job.remarks?.split(' ').slice(0, 5).join(' ') + (job.remarks?.split(' ').length > 5 ? '...' : '')}
+                          </td>
                           <td style={tdStyle}>
                             {job.createdBy?.username
                               ? `${job.createdBy.username} (${job.createdBy.role})`

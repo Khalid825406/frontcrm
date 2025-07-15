@@ -341,7 +341,7 @@ export default function RegisterPage() {
       </form>
          <p className="text-center mt-4">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 font-semibold">Login</Link>
+          <Link href="/" className="text-blue-600 font-semibold">Login</Link>
         </p>
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}
@@ -351,7 +351,7 @@ export default function RegisterPage() {
           max-width: 480px;
           margin: 60px auto;
           padding: 40px;
-          background: #f9f9f9;
+          background: #fff;
           border-radius: 16px;
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }

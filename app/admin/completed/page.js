@@ -49,7 +49,8 @@ export default function AdminCompletedJobsPage() {
     const matchesDate = filterDate ? jobDate === filterDate : true;
 
     return matchesQuery && matchesDate;
-  });
+  })
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <div style={{ display: 'flex' }}>

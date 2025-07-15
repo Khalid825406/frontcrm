@@ -65,6 +65,9 @@
 .dashboard-link{
   width: 100%;
 }
+.skeleton-card{
+  width: 100%;
+}
 }
 
 .card-count {
@@ -161,4 +164,50 @@
 }
 .dashboard-link:hover {
   transform: scale(1.02);
+}
+.skeleton-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  min-width: 269px;
+  min-height: 100px;
+  gap: 10px;
+}
+
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.skeleton-count {
+  width: 60px;
+  height: 28px;
+  margin-bottom: 8px;
+}
+
+.skeleton-label {
+  width: 140px;
+  height: 18px;
+}
+
+.skeleton-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+}
+.skeleton-cell {
+  height: 16px;
+  width: 100%;
+  margin: 6px 0;
 }

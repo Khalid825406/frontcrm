@@ -37,8 +37,9 @@ export default function ApprovedJobsPage() {
         const lastStatus = timeline.length > 0 ? timeline[timeline.length - 1].status : null;
 
         return job.approved && !job.rejected && (!job.assignedTo || lastStatus === 'Rejected');
-      });
-
+        
+      })
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setJobs(approved);
     } catch (err) {
       console.error(err);

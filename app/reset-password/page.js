@@ -116,7 +116,7 @@ export default function ResetPasswordPage() {
       {error && <p style={{ color: 'red', marginTop: 20, textAlign: 'center', fontWeight: 500 }}>{error}</p>}
 
       <div style={{ textAlign: 'center', marginTop: 25 }}>
-        <Link href="/login" style={{ color: '#0070f3', textDecoration: 'none', fontSize: 14 }}>
+        <Link href="/" style={{ color: '#0070f3', textDecoration: 'none', fontSize: 14 }}>
           ← Back to Login
         </Link>
       </div>

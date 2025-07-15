@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
-import '../dashboard/techdash.css'
+import '../dashboard/techdash.css';
 import { Hammer, Briefcase, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { requestForToken } from '../../firebase-messaging';
-
 
 export default function TechnicianDashboard() {
   const router = useRouter();
@@ -21,13 +20,10 @@ export default function TechnicianDashboard() {
     const token = localStorage.getItem('token');
     if (!token) return router.push('/login');
 
-    
-
     const fetchData = async () => {
       try {
-        
-         await requestForToken(); 
-        // Fetch technician profile
+        await requestForToken();
+
         const resUser = await axios.get('https://new-crm-sdcn.onrender.com/api/user/dashboard', {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -36,16 +32,16 @@ export default function TechnicianDashboard() {
           setUsername(resUser.data.user);
         }
 
-        // Fetch assigned jobs (make sure this route exists in backend)
-        const resJobs = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/assigned-jobs-status', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const resJobs = await axios.get(
+          'https://new-crm-sdcn.onrender.com/api/admin/assigned-jobs-status',
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         const allJobs = Array.isArray(resJobs.data) ? resJobs.data : [];
         setJobs(allJobs);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setJobs([]); // fallback to empty list
+        setJobs([]);
       } finally {
         setLoading(false);
       }
@@ -54,16 +50,16 @@ export default function TechnicianDashboard() {
     fetchData();
   }, [router]);
 
-  const completedJobs = jobs.filter(j => j.status === 'Completed');
-  const activeJobs = jobs.filter(j => ['Assigned', 'Accepted', 'In Progress'].includes(j.status));
-
-  if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
+  const completedJobs = jobs.filter((j) => j.status === 'Completed');
+  const activeJobs = jobs.filter((j) =>
+    ['Assigned', 'Accepted', 'In Progress'].includes(j.status)
+  );
 
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'Segoe UI, Tahoma, sans-serif' }}>
       <Sidebar role="technician" />
       <main
-      className='maintech'
+        className="maintech"
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',
@@ -76,8 +72,7 @@ export default function TechnicianDashboard() {
         <Topbar username={username} />
 
         <div
-
-        className='newtech'
+          className="newtech"
           style={{
             display: 'flex',
             gap: 20,
@@ -86,80 +81,63 @@ export default function TechnicianDashboard() {
             marginTop: 20,
           }}
         >
-          {/* Active Jobs */}
-          <Link href="/technician/jobs" className='dashboard-link'>
-            <div
-              style={{
-                flex: 1,
-                backgroundColor: '#10b981',
-                padding: 20,
-                borderRadius: 10,
-                color: '#fff',
-                fontWeight: 'bold',
-                minWidth: 250,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-              }}
-            >
-              <div>
-                <div style={{ fontSize: 50 }}>{activeJobs.length}</div>
-                <div>My Assigned Jobs</div>
-              </div>
-              <Hammer size={50} />
-            </div>
-         </Link>
-          {/* Total Jobs */}
-          <Link href="/technician/dashboard" className='dashboard-link'>
-          <div
-            style={{
-              flex: 1,
-              backgroundColor: '#f97316',
-              padding: 20,
-              borderRadius: 10,
-              color: '#fff',
-              fontWeight: 'bold',
-              minWidth: 250,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-            }}
-          >
-            <div>
-              <div style={{ fontSize: 50 }}>{jobs.length}</div>
-              <div>Total Jobs</div>
-            </div>
-            <Briefcase size={50} />
-          </div>
-        </Link>
-          {/* Completed Jobs */}
-          <Link href="/technician/TechnicianCompleted" className='dashboard-link'>
-          <div
-            style={{
-              flex: 1,
-              backgroundColor: '#3b82f6',
-              padding: 20,
-              borderRadius: 10,
-              color: '#fff',
-              fontWeight: 'bold',
-              minWidth: 250,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-            }}
-          >
-            <div>
-              <div style={{ fontSize: 50 }}>{completedJobs.length}</div>
-              <div>Completed Jobs</div>
-            </div>
-            <CheckCircle2 size={50} />
-          </div>
-          </Link>
+          {loading ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : (
+            <>
+              {/* Active Jobs */}
+              <Link href="/technician/jobs" className="dashboard-link">
+                <div className="dashboard-card" style={{ backgroundColor: '#10b981' }}>
+                  <div>
+                    <div style={{ fontSize: 50 }}>{activeJobs.length}</div>
+                    <div>My Assigned Jobs</div>
+                  </div>
+                  <Hammer size={50} />
+                </div>
+              </Link>
+
+              {/* Total Jobs */}
+              <Link href="/technician/dashboard" className="dashboard-link">
+                <div className="dashboard-card" style={{ backgroundColor: '#f97316' }}>
+                  <div>
+                    <div style={{ fontSize: 50 }}>{jobs.length}</div>
+                    <div>Total Jobs</div>
+                  </div>
+                  <Briefcase size={50} />
+                </div>
+              </Link>
+
+              {/* Completed Jobs */}
+              <Link href="/technician/TechnicianCompleted" className="dashboard-link">
+                <div className="dashboard-card" style={{ backgroundColor: '#3b82f6' }}>
+                  <div>
+                    <div style={{ fontSize: 50 }}>{completedJobs.length}</div>
+                    <div>Completed Jobs</div>
+                  </div>
+                  <CheckCircle2 size={50} />
+                </div>
+              </Link>
+            </>
+          )}
         </div>
       </main>
+    </div>
+  );
+}
+
+// ✅ Skeleton loader card
+function SkeletonCard() {
+  return (
+    <div className="skeleton-card">
+      <div className="skeleton-left">
+        <div className="skeleton-amount"></div>
+        <div className="skeleton-label"></div>
+      </div>
+      <div className="skeleton-icon"></div>
     </div>
   );
 }

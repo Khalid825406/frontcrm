@@ -8,6 +8,9 @@
     .dashboard-link{
         width: 100%;
     }
+    .skeleton-card{
+      width: 100%;
+    }
 }
 .dashboard-link {
   text-decoration: none !important;
@@ -16,4 +19,58 @@
 }
 .dashboard-link:hover {
   transform: scale(1.02);
+}
+/* Skeleton Loader Animation */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Skeleton Loader Card Style */
+.skeleton-card {
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 269px;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-amount {
+  width: 80px;
+  height: 40px;
+  background-color: #d1d5db;
+  border-radius: 6px;
+}
+
+.skeleton-label {
+  width: 120px;
+  height: 20px;
+  background-color: #d1d5db;
+  border-radius: 6px;
+}
+
+.skeleton-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #d1d5db;
+  border-radius: 50%;
 }

@@ -45,7 +45,6 @@ export default function AdminDashboard() {
     }
   }
 
-  // ✅ DELETE USER
   async function handleDeleteUser(userId) {
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
     if (!confirmDelete) return;
@@ -61,7 +60,7 @@ export default function AdminDashboard() {
 
       if (res.ok) {
         alert("User deleted successfully");
-        fetchData(); // reload
+        fetchData();
       } else {
         alert("Failed to delete user");
       }
@@ -74,9 +73,7 @@ export default function AdminDashboard() {
   const pendingUsers = users.filter(u => !u.approved && !u.rejected);
   const otherUsers = users.filter(u => u.approved || u.rejected);
   const pendingJobs = jobs.filter(j => !j.approved && !j.rejected);
-    const assignedJobs = jobs.filter(
-      j => j.assignedTo && j.status !== 'Completed' && j.status !== 'Cancelled'
-    );
+  const assignedJobs = jobs.filter(j => j.assignedTo && j.status !== 'Completed' && j.status !== 'Cancelled');
   const completedJobs = jobs.filter(j => j.status === 'Completed');
   const approvedJobs = jobs.filter(j => j.approved);
 
@@ -92,7 +89,42 @@ export default function AdminDashboard() {
     return '#ff9800';
   }
 
-  if (loading) return <p className="loading">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="admin-dashboard">
+        <Sidebar role="admin" />
+        <main className="admin-main">
+          <Topbar username="Admin" />
+
+          <div className="cards-wrapper">
+            {Array(6).fill().map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+
+          <div className="table-wrapper">
+            <h2>All Users</h2>
+            <div className="table-container">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    {["Username", "Role", "Status", "Number", "Action"].map((col, idx) => (
+                      <th key={idx} className="table-head">{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array(5).fill().map((_, i) => (
+                    <SkeletonTableRow key={i} cols={5} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-dashboard">
@@ -100,32 +132,30 @@ export default function AdminDashboard() {
       <main className="admin-main">
         <Topbar username="Admin" />
 
-        {/* Cards */}
         <div className="cards-wrapper">
           <Link href="/admin/pending-approvals" className="dashboard-link">
-             <DashboardCard color="blue" count={pendingUsers.length} label="Pending User Approvals" icon={<UserCheck size={54} />} />
+            <DashboardCard color="blue" count={pendingUsers.length} label="Pending User Approvals" icon={<UserCheck size={54} />} />
           </Link>
           <Link href="/admin/pending-job-approvals" className="dashboard-link">
-             <DashboardCard color="green" count={pendingJobs.length} label="Pending Job Approvals" icon={<FileClock size={54} />} />
+            <DashboardCard color="green" count={pendingJobs.length} label="Pending Job Approvals" icon={<FileClock size={54} />} />
           </Link>
           <Link href="/admin/dashboard" className="dashboard-link">
-             <DashboardCard color="orange" count={users.length} label="All Users" icon={<Users size={54} />} />
+            <DashboardCard color="orange" count={users.length} label="All Users" icon={<Users size={54} />} />
           </Link>
           <Link href="/admin/assigned-jobs-status" className="dashboard-link">
-             <DashboardCard color="purple" count={assignedJobs.length} label="Active Assigned Jobs" icon={<Briefcase size={54} />} />
+            <DashboardCard color="purple" count={assignedJobs.length} label="Active Assigned Jobs" icon={<Briefcase size={54} />} />
           </Link>
           <Link href="/admin/completed" className="dashboard-link">
-              <DashboardCard color="emerald" count={completedJobs.length} label="Completed Jobs" icon={<CheckCircle size={54} />} />
+            <DashboardCard color="emerald" count={completedJobs.length} label="Completed Jobs" icon={<CheckCircle size={54} />} />
           </Link>
           <Link href="/admin/alljob" className="dashboard-link">
             <DashboardCard color="red" count={jobs.length} label="All Jobs" icon={<Briefcase size={54} />} />
           </Link>
           <Link href="/admin/approved-jobs" className="dashboard-link">
-              <DashboardCard color="teal" count={approvedJobs.length} label="Approved Jobs" icon={<CheckCircle size={54} />} />
+            <DashboardCard color="teal" count={approvedJobs.length} label="Approved Jobs" icon={<CheckCircle size={54} />} />
           </Link>
         </div>
 
-        {/* User Table */}
         <SectionTable
           title="All Users"
           columns={["Username", "Role", "Status", "Number", "Action"]}
@@ -134,7 +164,9 @@ export default function AdminDashboard() {
             <>
               <td className="table-cell">{user.username}</td>
               <td className="table-cell">{user.role}</td>
-              <td className="table-cell" style={{ color: getStatusColor(getStatus(user)), fontWeight: 600 }}><span className='mystay'>{getStatus(user)}</span></td>
+              <td className="table-cell" style={{ color: getStatusColor(getStatus(user)), fontWeight: 600 }}>
+                <span className='mystay'>{getStatus(user)}</span>
+              </td>
               <td className="table-cell">{user.phone}</td>
               <td className="table-cell">
                 <button
@@ -195,5 +227,29 @@ function SectionTable({ title, columns, data, renderRow, emptyMessage }) {
         </table>
       </div>
     </div>
+  );
+}
+
+// 🧩 Skeleton Components
+function SkeletonCard() {
+  return (
+    <div className="card skeleton-card">
+      <div>
+        <div className="skeleton skeleton-count" />
+        <div className="skeleton skeleton-label" />
+      </div>
+      <div className="skeleton skeleton-icon" />
+    </div>
+  );
+}
+
+
+function SkeletonTableRow({ cols }) {
+  return (
+    <tr>
+      {Array(cols).fill().map((_, i) => (
+        <td key={i}><div className="skeleton skeleton-cell" /></td>
+      ))}
+    </tr>
   );
 }

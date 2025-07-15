@@ -50,8 +50,8 @@ export default function AdminActiveJobsPage() {
     const matchesStatus = statusFilter ? latestStatus === statusFilter : true;
 
     return matchesQuery && matchesStatus;
-  });
-
+  })
+ .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar role="admin" />

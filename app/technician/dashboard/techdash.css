@@ -8,9 +8,6 @@
     .dashboard-link{
         width: 100%;
     }
-    .skeleton-card{
-      width: 100%;
-    }
 }
 .dashboard-link {
   text-decoration: none !important;
@@ -20,7 +17,63 @@
 .dashboard-link:hover {
   transform: scale(1.02);
 }
-/* Skeleton Loader Animation */
+
+/* Main Layout */
+.tech-dashboard-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.maintech {
+  flex: 1;
+  background-color: #f9f9f9;
+  margin-left: 240px;
+  padding-top: 60px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.newtech {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 50px;
+  margin-top: 20px;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+  flex: 1;
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  min-width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.dashboard-card.green {
+  background-color: #10b981;
+}
+
+.dashboard-card.orange {
+  background-color: #f97316;
+}
+
+.dashboard-card.blue {
+  background-color: #3b82f6;
+}
+
+.card-number {
+  font-size: 50px;
+}
+
+/* Skeleton Loader */
 @keyframes pulse {
   0% {
     opacity: 1;
@@ -33,7 +86,6 @@
   }
 }
 
-/* Skeleton Loader Card Style */
 .skeleton-card {
   flex: 1;
   background-color: #fff;
@@ -48,24 +100,20 @@
   animation: pulse 1.5s infinite;
 }
 
-.skeleton-left {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.skeleton-content .skeleton-line {
+  background-color: #d1d5db;
+  border-radius: 6px;
 }
 
-.skeleton-amount {
+.skeleton-line.title {
   width: 80px;
   height: 40px;
-  background-color: #d1d5db;
-  border-radius: 6px;
+  margin-bottom: 10px;
 }
 
-.skeleton-label {
+.skeleton-line.subtitle {
   width: 120px;
   height: 20px;
-  background-color: #d1d5db;
-  border-radius: 6px;
 }
 
 .skeleton-icon {

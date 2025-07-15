@@ -51,7 +51,7 @@ export default function AdminDashboard() {
 
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/delete-user/${userId}`, {
+      const res = await fetch(`https://new-crm-sdcn.onrender.com/api/admin/delete-user/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

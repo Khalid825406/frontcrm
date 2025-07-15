@@ -327,7 +327,7 @@ export default function RegisterPage() {
         <label>Mobile Number</label>
         <input
           name="phone"
-          placeholder="10-digit number"
+          placeholder="8-digit number"
           value={form.phone}
           onChange={handleChange}
           maxLength={10}

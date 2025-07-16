@@ -59,7 +59,7 @@ export default function EditJobModal({ job, onClose, onSuccess }) {
       });
 
       await axios.put(
-        `http://localhost:5000/api/jobs/${job._id}`,
+        `https://new-crm-sdcn.onrender.com/api/jobs/${job._id}`,
         data,
         {
           headers: { Authorization: `Bearer ${token}` },

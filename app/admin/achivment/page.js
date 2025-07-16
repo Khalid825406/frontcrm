@@ -11,7 +11,7 @@ export default function TechnicianLeaderboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/technician/achievements')
+    axios.get('https://new-crm-sdcn.onrender.com/api/technician/achievements')
       .then(res => {
         setAchievements(res.data);
         setLoading(false);

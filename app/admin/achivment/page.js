@@ -8,21 +8,26 @@ import Topbar from '../../components/Topbar';
 
 export default function TechnicianLeaderboard() {
   const [achievements, setAchievements] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('https://new-crm-sdcn.onrender.com/api/technician/achievements')
-      .then(res => setAchievements(res.data))
-      .catch(err => console.error(err));
+    axios.get('http://localhost:5000/api/technician/achievements')
+      .then(res => {
+        setAchievements(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   return (
     <div className="dashboard-layout">
-      {/* Sidebar on the left */}
       <div className="sidebar-wrapper">
         <Sidebar role="admin" />
       </div>
 
-      {/* Main content on the right */}
       <div className="content-wrapper">
         <Topbar username="admin" />
         <div className="leaderboard-container">
@@ -42,21 +47,33 @@ export default function TechnicianLeaderboard() {
                 </tr>
               </thead>
               <tbody>
-            {achievements.map((tech, index) => (
-                <tr key={tech.technicianId?.toString() || index} className={`leaderboard-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
-                <td className="rank">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
-                </td>
-                <td>{tech.name}</td>
-                <td>{tech.completedJobs}</td>
-                <td>{tech.rejectionRate}</td>
-                <td>{tech.avgResponseTimeMins} mins</td>
-                <td>{tech.avgCompletionTimeMins} mins</td>
-                <td className="score">{tech.score.toFixed(1)}</td>
-                </tr>
-            ))}
-            </tbody>
-
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <tr key={i} className={`leaderboard-row ${i % 2 === 0 ? 'even' : 'odd'}`}>
+                      <td colSpan={7} style={{ textAlign: 'center', padding: '20px' }}>
+                        <div className="skeleton-loader" style={{ height: '20px', width: '80%', margin: '0 auto' }}></div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  achievements.map((tech, index) => {
+                    console.log('Completed jobs:', tech.completedJobs);
+                    return (
+                      <tr key={tech.technicianId?.toString() || index} className={`leaderboard-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
+                        <td className="rank">
+                          {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                        </td>
+                        <td>{tech.name}</td>
+                        <td>{tech.completedJobs ?? 0}</td>
+                        <td>{tech.rejectionRate}</td>
+                        <td>{tech.avgResponseTimeMins} mins</td>
+                        <td>{tech.avgCompletionTimeMins} mins</td>
+                        <td className="score">{isNaN(tech.score) ? '0.0' : tech.score.toFixed(1)}</td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
             </table>
           </div>
 

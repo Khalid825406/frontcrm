@@ -211,3 +211,14 @@
   width: 100%;
   margin: 6px 0;
 }
+.detedd{
+    background-color: #ffe9e9;
+     border: none;
+    outline: none;
+    border-radius: 3px;
+    padding: 2px 8px;
+}
+.detedd svg{
+    width: 14px;
+    color: red;
+}

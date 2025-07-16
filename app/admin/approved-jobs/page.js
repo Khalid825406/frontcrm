@@ -37,9 +37,8 @@ export default function ApprovedJobsPage() {
         const lastStatus = timeline.length > 0 ? timeline[timeline.length - 1].status : null;
 
         return job.approved && !job.rejected && (!job.assignedTo || lastStatus === 'Rejected');
-        
-      })
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
       setJobs(approved);
     } catch (err) {
       console.error(err);
@@ -48,7 +47,6 @@ export default function ApprovedJobsPage() {
       setLoading(false);
     }
   };
-
 
   const filterJobs = () => {
     const filtered = jobs.filter((job) => {
@@ -89,7 +87,8 @@ export default function ApprovedJobsPage() {
   const handleAssignTechnician = async (technicianId) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.post('https://new-crm-sdcn.onrender.com/api/admin/assign-job',
+      await axios.post(
+        'https://new-crm-sdcn.onrender.com/api/admin/assign-job',
         { jobId: selectedJobId, technicianId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -109,7 +108,6 @@ export default function ApprovedJobsPage() {
       <main className="main-container">
         <Topbar username="Admin" />
         <div className="content-wrapper">
-
           <div className="filters">
             <input
               type="text"
@@ -163,14 +161,12 @@ export default function ApprovedJobsPage() {
                         <button className="assign-btn" onClick={() => handleAssignTechnician(tech._id)}>
                           Assign
                         </button>
-                       
                       </div>
-                    
                     </li>
                   ))}
-                     <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                          <X />
-                        </button>
+                <button className="cancel-btn" onClick={() => setShowModal(false)}>
+                  <X />
+                </button>
               </ul>
             </div>
           </div>
@@ -180,8 +176,36 @@ export default function ApprovedJobsPage() {
   );
 }
 
+// Skeleton Loader Component
+function JobCardSkeleton() {
+  return (
+    <div className="card-container">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="job-card skeleton-card">
+          <div className="skeleton-image shimmer"></div>
+          <div className="job-details">
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-line shimmer medium" />
+            <div className="skeleton-line shimmer short" />
+            <div className="skeleton-button shimmer" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+
 function JobCards({ jobs, loading, onAssign }) {
-  if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
+  if (loading) return <JobCardSkeleton />;
   if (jobs.length === 0) return <p style={{ padding: 20 }}>No jobs found.</p>;
 
   return (

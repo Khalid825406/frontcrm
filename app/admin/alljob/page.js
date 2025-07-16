@@ -5,6 +5,8 @@ import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import '../alljob/all.css';
+import { SquarePen, Trash2 } from 'lucide-react';
+import EditJobModal from './EditJobModal';
 
 export default function AllOtherJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -14,6 +16,7 @@ export default function AllOtherJobsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedJobIds, setSelectedJobIds] = useState([]);
   const jobsPerPage = 10;
+  const [editingJob, setEditingJob] = useState(null);
 
   useEffect(() => {
     fetchJobs();
@@ -28,6 +31,7 @@ export default function AllOtherJobsPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log('Fetched Jobs:', res.data);
       setJobs(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
@@ -44,9 +48,7 @@ export default function AllOtherJobsPage() {
     const token = localStorage.getItem('token');
     try {
       const res = await axios.delete(`https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.status === 200) {
@@ -74,9 +76,7 @@ export default function AllOtherJobsPage() {
     try {
       for (const jobId of selectedJobIds) {
         await axios.delete(`https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
       }
       alert('Selected jobs deleted');
@@ -99,7 +99,6 @@ export default function AllOtherJobsPage() {
   function toggleSelectAll() {
     const visibleJobIds = currentJobs.map((job) => job._id);
     const allSelected = visibleJobIds.every((id) => selectedJobIds.includes(id));
-
     setSelectedJobIds(allSelected ? [] : visibleJobIds);
   }
 
@@ -115,21 +114,19 @@ export default function AllOtherJobsPage() {
     return '#ff9800';
   }
 
-  const filteredJobs = jobs.filter((job) => {
-    const status = getStatus(job).toLowerCase();
-    const query = searchQuery.toLowerCase();
-
-    const matchesSearch =
-      job.customerName?.toLowerCase().includes(query) ||
-      job.customerPhone?.toLowerCase().includes(query) ||
-      job.workType?.toLowerCase().includes(query) ||
-      job.location?.toLowerCase().includes(query);
-
-    const matchesStatus = !statusFilter || status === statusFilter.toLowerCase();
-
-    return matchesSearch && matchesStatus;
-  }) 
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const filteredJobs = jobs
+    .filter((job) => {
+      const status = getStatus(job).toLowerCase();
+      const query = searchQuery.toLowerCase();
+      const matchesSearch =
+        job.customerName?.toLowerCase().includes(query) ||
+        job.customerPhone?.toLowerCase().includes(query) ||
+        job.workType?.toLowerCase().includes(query) ||
+        job.location?.toLowerCase().includes(query);
+      const matchesStatus = !statusFilter || status === statusFilter.toLowerCase();
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
@@ -161,8 +158,7 @@ export default function AllOtherJobsPage() {
               overflowX: 'auto',
             }}
           >
-            {/* 🔍 Search + Filter Bar */}
-            <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+            <div style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
               <input
                 type="text"
                 placeholder="Search by name, phone, work type, location..."
@@ -171,12 +167,7 @@ export default function AllOtherJobsPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: '1px solid #ccc',
-                  width: '60%',
-                }}
+                style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc', width: '60%' }}
               />
               <select
                 value={statusFilter}
@@ -191,9 +182,11 @@ export default function AllOtherJobsPage() {
                 <option value="Rejected">Rejected</option>
                 <option value="Pending">Pending</option>
               </select>
+              <span style={{ color: '#666', fontSize: 14 }}>
+                Showing {filteredJobs.length} job(s)
+              </span>
             </div>
 
-            {/* ✅ Delete Selected Button */}
             <button
               onClick={handleDeleteSelected}
               disabled={selectedJobIds.length === 0}
@@ -204,14 +197,14 @@ export default function AllOtherJobsPage() {
                 color: 'white',
                 border: 'none',
                 borderRadius: 4,
-                cursor: selectedJobIds.length === 0 ? 'not-allowed' : 'pointer'
+                cursor: selectedJobIds.length === 0 ? 'not-allowed' : 'pointer',
               }}
             >
               Delete Selected ({selectedJobIds.length})
             </button>
 
             {loading ? (
-              <p style={{ padding: 20 }}>Loading jobs...</p>
+              <SkeletonTableRow />
             ) : (
               <>
                 <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
@@ -250,7 +243,7 @@ export default function AllOtherJobsPage() {
                       </tr>
                     ) : (
                       currentJobs.map((job) => (
-                        <tr key={job._id} className='back-border'>
+                        <tr key={job._id} className="back-border">
                           <td style={tdStyle}>
                             <input
                               type="checkbox"
@@ -266,7 +259,8 @@ export default function AllOtherJobsPage() {
                           <td style={tdStyle}>{job.location}</td>
                           <td style={tdStyle}>{job.priority}</td>
                           <td style={tdStyle} title={job.remarks}>
-                            {job.remarks?.split(' ').slice(0, 5).join(' ') + (job.remarks?.split(' ').length > 5 ? '...' : '')}
+                            {job.remarks?.split(' ').slice(0, 5).join(' ') +
+                              (job.remarks?.split(' ').length > 5 ? '...' : '')}
                           </td>
                           <td style={tdStyle}>
                             {job.createdBy?.username
@@ -280,23 +274,25 @@ export default function AllOtherJobsPage() {
                               fontWeight: 600,
                             }}
                           >
-                            <span className='mystay'>{getStatus(job)}</span>
+                            <span className="mystay">{getStatus(job)}</span>
                           </td>
+                          <td style={tdStyle}>{new Date(job.createdAt).toLocaleDateString()}</td>
                           <td style={tdStyle}>
-                            {new Date(job.createdAt).toLocaleDateString()}
-                          </td>
-                          <td style={tdStyle}>
-                            <button
-                              onClick={() => handleDelete(job._id)}
-                              style={{
-                                backgroundColor: 'transparent',
-                                color: 'red',
-                                border: 'none',
-                                cursor: 'pointer',
-                                outline : 'none'
-                              }}
-                            >
-                              Delete
+                            <button onClick={() => setEditingJob(job)} className="Edit">
+                              <SquarePen />
+                            </button>
+
+                            
+                            {editingJob && (
+                              <EditJobModal
+                                job={editingJob}
+                                onClose={() => setEditingJob(null)}
+                                onSuccess={fetchJobs}
+                              />
+                            )}
+
+                            <button onClick={() => handleDelete(job._id)} className="detedd">
+                              <Trash2 />
                             </button>
                           </td>
                         </tr>
@@ -305,7 +301,6 @@ export default function AllOtherJobsPage() {
                   </tbody>
                 </table>
 
-                {/* 📄 Pagination Buttons */}
                 <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', gap: 10 }}>
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
@@ -314,7 +309,9 @@ export default function AllOtherJobsPage() {
                   >
                     Prev
                   </button>
-                  <span>Page {currentPage} of {totalPages}</span>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                     disabled={currentPage === totalPages}
@@ -332,13 +329,38 @@ export default function AllOtherJobsPage() {
   );
 }
 
+function SkeletonTableRow({ rowCount = 8, colCount = 13 }) {
+  return (
+    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
+      <thead>
+        <tr style={{ backgroundColor: '#293ace' }}>
+          {Array.from({ length: colCount }).map((_, idx) => (
+            <th key={idx} style={thStyle}></th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {Array.from({ length: rowCount }).map((_, rowIndex) => (
+          <tr key={rowIndex} className="skeleton-row">
+            {Array.from({ length: colCount }).map((_, colIndex) => (
+              <td key={colIndex} style={tdStyle}>
+                <div className="skeleton-line" />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 const thStyle = {
   textAlign: 'left',
   padding: '12px',
   fontWeight: 600,
   fontSize: 14,
   whiteSpace: 'nowrap',
-  color: '#fff'
+  color: '#fff',
 };
 
 const tdStyle = {

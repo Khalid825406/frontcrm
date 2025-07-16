@@ -12,6 +12,7 @@ export default function AdminActiveJobsPage() {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -34,7 +35,8 @@ export default function AdminActiveJobsPage() {
       .catch((err) => {
         console.error('Error fetching jobs:', err);
         setError('Failed to load jobs. Please try again.');
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const filteredJobs = jobs.filter((job) => {
@@ -50,8 +52,8 @@ export default function AdminActiveJobsPage() {
     const matchesStatus = statusFilter ? latestStatus === statusFilter : true;
 
     return matchesQuery && matchesStatus;
-  })
- .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar role="admin" />
@@ -66,8 +68,7 @@ export default function AdminActiveJobsPage() {
       >
         <Topbar username="Admin" />
 
-        {/* 🔍 Search & Filter */}
-        <div className='search-box' style={{ width: '100%',  maxWidth: 1000, display: 'flex', gap: 12 , margin: '12px auto', background:'rgb(247, 248, 249)', padding:12, borderRadius:5,}}>
+        <div className="search-box" style={{ maxWidth: 1000, display: 'flex', gap: 12, margin: '12px auto', background: 'rgb(247, 248, 249)', padding: 12, borderRadius: 5 }}>
           <input
             type="text"
             placeholder="Search by customer, phone, work type, location..."
@@ -100,81 +101,75 @@ export default function AdminActiveJobsPage() {
         </div>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {filteredJobs.length === 0 && !error && <p>No matching jobs found.</p>}
+        {!loading && filteredJobs.length === 0 && !error && <p>No matching jobs found.</p>}
 
-<div className='meicsdasw'>
-   {filteredJobs.map((j) => (
-          <div
-            key={j._id}
-            className="job-card-status"
-            style={{
-              padding: 15,
-              border: '1px solid #ccc',
-              borderRadius: 8,
-              width: '470px',
-              background: '#f7f8f9',
-            }}
-          >
-            <div>
-              {j.images?.[0] && (
-                <img
-                  src={j.images[0]}
-                  alt="Job"
-                  style={{ width: '100%', height: 250, borderRadius: '10px 10px 0px 0px' }}
-                />
-              )}
-              <div className="mainsdflrx">
-                <div className="maieerrdds">
-                  <div className="info-block">
-                    <div className="info-label">Customer Name</div>
-                    <div className="info-value">{j.customerName}</div>
-                  </div>
-                  <div className="info-block">
-                    <div className="info-label">Number</div>
-                    <div className="info-value">{j.customerPhone}</div>
-                  </div>
-                  <div className="info-block">
-                    <div className="info-label">Work Type</div>
-                    <div className="info-value">{j.workType}</div>
-                  </div>
-                  <div className="info-block">
-                    <div className="info-label">Department</div>
-                    <div className="info-value">{j.Department}</div>
+        <div className="meicsdasw">
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="job-card-status shimmer-card"
+                  style={{
+                    padding: 15,
+                    border: '1px solid #ccc',
+                    borderRadius: 8,
+                    width: 470,
+                    background: '#f7f8f9',
+                    marginBottom: 20,
+                  }}
+                >
+                  <div className="shimmer-box" style={{ height: 200, borderRadius: 8 }}></div>
+                  <div style={{ marginTop: 12 }}>
+                    <div className="shimmer-line" style={{ width: '60%', height: 14 }}></div>
+                    <div className="shimmer-line" style={{ width: '30%', height: 12, marginTop: 8 }}></div>
+                    <div className="shimmer-line" style={{ width: '40%', height: 12, marginTop: 8 }}></div>
+                    <div className="shimmer-line" style={{ width: '35%', height: 12, marginTop: 8 }}></div>
                   </div>
                 </div>
-                <div className="maieerrdds">
-                  <div className="info-block">
-                    <div className="info-label">Location</div>
-                    <div className="info-value">{j.location}</div>
+              ))
+            : filteredJobs.map((j) => (
+                <div
+                  key={j._id}
+                  className="job-card-status"
+                  style={{
+                    padding: 15,
+                    border: '1px solid #ccc',
+                    borderRadius: 8,
+                    width: '470px',
+                    background: '#f7f8f9',
+                    marginBottom: 20,
+                  }}
+                >
+                  {j.images?.[0] && (
+                    <img
+                      src={j.images[0]}
+                      alt="Job"
+                      style={{ width: '100%', height: 250, borderRadius: '10px 10px 0px 0px' }}
+                    />
+                  )}
+                  <div className="mainsdflrx">
+                    <div className="maieerrdds">
+                      <div className="info-block"><div className="info-label">Customer Name</div><div className="info-value">{j.customerName}</div></div>
+                      <div className="info-block"><div className="info-label">Number</div><div className="info-value">{j.customerPhone}</div></div>
+                      <div className="info-block"><div className="info-label">Work Type</div><div className="info-value">{j.workType}</div></div>
+                      <div className="info-block"><div className="info-label">Department</div><div className="info-value">{j.Department}</div></div>
+                    </div>
+                    <div className="maieerrdds">
+                      <div className="info-block"><div className="info-label">Location</div><div className="info-value">{j.location}</div></div>
+                      <div className="info-block"><div className="info-label">Priority</div><div className="info-value">{j.priority}</div></div>
+                      <div className="info-block"><div className="info-label">Reason</div><div className="info-value">{j.reason}</div></div>
+                      <div className="info-block"><div className="info-label">Assigned To</div><div className="info-value">{j.assignedTo?.username || 'Unassigned'}</div></div>
+                    </div>
                   </div>
                   <div className="info-block">
-                    <div className="info-label">Priority</div>
-                    <div className="info-value">{j.priority}</div>
+                    <div className="info-label">Date & Time</div>
+                    <div className="info-value">{new Date(j.datetime).toLocaleString()}</div>
                   </div>
-                  <div className="info-block">
-                    <div className="info-label">Reason</div>
-                    <div className="info-value">{j.reason}</div>
-                  </div>
-                  <div className="info-block">
-                    <div className="info-label">Assigned To</div>
-                    <div className="info-value">{j.assignedTo?.username || 'Unassigned'}</div>
-                  </div>
+                  <div className="remark-box">📌 Remark: {j.remarks}</div>
+                  <StatusTimeline timeline={j.statusTimeline} job={j} />
                 </div>
-              </div>
-
-              <div className="info-block">
-                <div className="info-label">Date & Time</div>
-                <div className="info-value">{new Date(j.datetime).toLocaleString()}</div>
-              </div>
-
-              <div className="remark-box">📌 Remark: {j.remarks}</div>
-            </div>
-
-            <StatusTimeline timeline={j.statusTimeline} job={j} />
-          </div>
-        ))}
-</div>
-     
+              ))}
+        </div>
       </main>
     </div>
   );

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import '../dashboard/AdminDashboard.css';
+import {  Trash2 } from 'lucide-react';
 import {
   FileClock,
   UserCheck,
@@ -171,16 +172,8 @@ export default function AdminDashboard() {
               <td className="table-cell">
                 <button
                   onClick={() => handleDeleteUser(user._id)}
-                  style={{
-                    backgroundColor: '#f44336',
-                    color: 'white',
-                    border: 'none',
-                    padding: '6px 12px',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Delete
+                 className="detedd">
+                              <Trash2 />
                 </button>
               </td>
             </>

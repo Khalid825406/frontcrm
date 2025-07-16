@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '@/app/components/Sidebar';
 import Topbar from '@/app/components/Topbar';
-import '../pending-job-approvals/PendingJobsPage.css'
+import '../pending-job-approvals/PendingJobsPage.css';
 
 export default function PendingJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -37,7 +37,7 @@ export default function PendingJobsPage() {
   }
 
   async function handleJobApproval(jobId, approve) {
-    setActionLoading(jobId);
+    setActionLoading({ jobId, action: approve ? 'approve' : 'reject' });
     const token = localStorage.getItem('token');
     try {
       const res = await fetch(
@@ -65,113 +65,72 @@ export default function PendingJobsPage() {
     }
   }
 
+
   return (
-    <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
+    <div className="pending-layout">
       <Sidebar role="admin" />
 
-      <main
-      className='masieed'
-        style={{
-          flex: 1,
-          backgroundColor: '#f9f9f9',
-          marginLeft: 240,
-          paddingTop: 60,
-          overflowY: 'auto',
-          height: '100vh',
-          padding: '20px',
-        }}
-      >
+      <main className="pending-main">
         <Topbar username="Admin" />
 
-
-        <div
-          style={{
-            backgroundColor: 'white',
-            padding: 20,
-            borderRadius: 10,
-            boxShadow: '0 1px 5px rgba(0,0,0,0.1)',
-            maxWidth: 1000,
-            margin: '60px auto',
-          }}
-        >
+        <div className="pending-card">
           {loading ? (
-            <p>Loading...</p>
+            Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="skeleton-row">
+                <div className="skeleton skeleton-text" style={{ width: '20%' }}></div>
+                <div className="skeleton skeleton-text" style={{ width: '20%' }}></div>
+                <div className="skeleton skeleton-text" style={{ width: '25%' }}></div>
+                <div className="skeleton skeleton-text" style={{ width: '15%' }}></div>
+                <div className="skeleton skeleton-button"></div>
+              </div>
+            ))
           ) : jobs.length === 0 ? (
             <p>No pending jobs found.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#f2f2f2' }}>
-                  <th style={thStyle}>Customer</th>
-                  <th style={thStyle}>Work Type</th>
-                  <th style={thStyle}>Date/Time</th>
-                  <th style={thStyle}>Priority</th>
-                  <th style={thStyle}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.map((job) => (
-                  <tr key={job._id}>
-                    <td style={tdStyle}>{job.customerName}</td>
-                    <td style={tdStyle}>{job.workType}</td>
-                    <td style={tdStyle}>{new Date(job.datetime).toLocaleString()}</td>
-                    <td style={tdStyle}>{job.priority}</td>
-                    <td style={tdStyle}>
-                      <button
-                        onClick={() => handleJobApproval(job._id, true)}
-                        disabled={actionLoading === job._id}
-                        style={buttonApproveStyle}
-                      >
-                        {actionLoading === job._id ? 'Approving...' : 'Approve'}
-                      </button>
-                      <button
-                        onClick={() => handleJobApproval(job._id, false)}
-                        disabled={actionLoading === job._id}
-                        style={buttonRejectStyle}
-                      >
-                        {actionLoading === job._id ? 'Rejecting...' : 'Reject'}
-                      </button>
-                    </td>
+            <div className="table-wrapper">
+              <table className="pending-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Work Type</th>
+                    <th>Date/Time</th>
+                    <th>Priority</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {jobs.map((job) => (
+                    <tr key={job._id}>
+                      <td>{job.customerName}</td>
+                      <td>{job.workType}</td>
+                      <td>{new Date(job.datetime).toLocaleString()}</td>
+                      <td>{job.priority}</td>
+                      <td>
+                        <button
+                          onClick={() => handleJobApproval(job._id, true)}
+                          disabled={actionLoading?.jobId === job._id && actionLoading?.action === 'approve'}
+                          className="btn-approve"
+                        >
+                          {actionLoading?.jobId === job._id && actionLoading?.action === 'approve' ? 'Approving...' : 'Approve'}
+                        </button>
+
+                        <button
+                          onClick={() => handleJobApproval(job._id, false)}
+                          disabled={actionLoading?.jobId === job._id && actionLoading?.action === 'reject'}
+                          className="btn-reject"
+                        >
+                          {actionLoading?.jobId === job._id && actionLoading?.action === 'reject' ? 'Rejecting...' : 'Reject'}
+                        </button>
+
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </main>
     </div>
   );
 }
-
-const thStyle = {
-  textAlign: 'left',
-  padding: '12px',
-  fontWeight: 600,
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-};
-
-const tdStyle = {
-  padding: '10px 12px',
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-};
-
-const buttonApproveStyle = {
-  backgroundColor: '#4CAF50',
-  border: 'none',
-  color: 'white',
-  padding: '6px 12px',
-  marginRight: 8,
-  borderRadius: 4,
-  cursor: 'pointer',
-};
-
-const buttonRejectStyle = {
-  backgroundColor: '#f44336',
-  border: 'none',
-  color: 'white',
-  padding: '6px 12px',
-  borderRadius: 4,
-  cursor: 'pointer',
-};

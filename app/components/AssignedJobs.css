@@ -242,6 +242,7 @@
     display: block;
   }
   .sidebar-toggle button{
+    padding: 0px !important;
     border: none;
     outline: none;
     background: none;

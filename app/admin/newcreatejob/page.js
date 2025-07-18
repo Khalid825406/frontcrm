@@ -261,7 +261,7 @@ export default function NewCreateJobPage() {
               <input
                 type="file"
                 name="images"
-                multiple
+                capture="environment"
                 accept="image/*"
                 onChange={handleFileChange}
                 className={styles.input}

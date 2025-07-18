@@ -246,7 +246,7 @@ export default function TechnicianJobsPage() {
             <div className="modal-overlay">
               <div className="modal-content">
                 <h3>{uploadType === 'start' ? 'Start Work' : 'Complete Work'}</h3>
-                <input type="file" capture="environment" onChange={(e) => setUploadImage(e.target.files[0])} />
+                <input type="file" onChange={(e) => setUploadImage(e.target.files[0])} />
                 <textarea
                   className='newtext'
                   placeholder="Remarks"

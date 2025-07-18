@@ -263,7 +263,6 @@ export default function NewCreateJobPage() {
                 name="images"
                 multiple
                 accept="image/*"
-                capture="environment"
                 onChange={handleFileChange}
                 className={styles.input}
               />

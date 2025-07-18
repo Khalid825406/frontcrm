@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import { requestForToken } from '../firebase-messaging';
 import { Eye, EyeOff } from 'lucide-react';
-import '../login/login.css'; // ✅ regular CSS import (not module)
+import '../login/login.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,15 +16,33 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // ✅ Auto-redirect if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = JSON.parse(atob(token.split('.')[1]));
+        const role = decoded.role;
+
+        if (role === 'admin') router.replace('/admin/dashboard');
+        else if (role === 'staff') router.replace('/staff/dashboard');
+        else if (role === 'technician') router.replace('/technician/dashboard');
+      } catch (err) {
+        console.error('Invalid token:', err);
+        localStorage.removeItem('token');
+      }
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
     try {
-      const res = await axios.post('https://new-crm-sdcn.onrender.com/api/auth/login', {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        'https://new-crm-sdcn.onrender.com/api/auth/login',
+        { username, password }
+      );
 
       const { token } = res.data;
       const decoded = JSON.parse(atob(token.split('.')[1]));
@@ -33,9 +51,9 @@ export default function LoginPage() {
       localStorage.setItem('token', token);
       await requestForToken();
 
-      if (role === 'admin') router.push('/admin/dashboard');
-      else if (role === 'staff') router.push('/staff/dashboard');
-      else if (role === 'technician') router.push('/technician/dashboard');
+      if (role === 'admin') router.replace('/admin/dashboard');
+      else if (role === 'staff') router.replace('/staff/dashboard');
+      else if (role === 'technician') router.replace('/technician/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {

@@ -7,6 +7,7 @@ import Topbar from '../../components/Topbar';
 import '../alljob/all.css';
 import { SquarePen, Trash2 } from 'lucide-react';
 import EditJobModal from './EditJobModal';
+import {toast} from 'react-hot-toast'
 
 export default function AllOtherJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -52,7 +53,7 @@ export default function AllOtherJobsPage() {
       });
 
       if (res.status === 200) {
-        alert('Job deleted successfully');
+        toast.success('Job deleted successfully')
         fetchJobs();
       } else {
         alert(res.data.message || 'Failed to delete job');
@@ -79,7 +80,7 @@ export default function AllOtherJobsPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-      alert('Selected jobs deleted');
+      toast.success('Selected jobs deleted')
       setSelectedJobIds([]);
       fetchJobs();
     } catch (err) {

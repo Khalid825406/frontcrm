@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './EditJobModal.css';
+import toast, {taost} from 'react-hot-toast'
 
 export default function EditJobModal({ job, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -65,8 +66,7 @@ export default function EditJobModal({ job, onClose, onSuccess }) {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      alert('Job updated successfully');
+      toast.success('Job updated successfully')
       onClose();
       onSuccess();
     } catch (err) {

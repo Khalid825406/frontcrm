@@ -217,8 +217,21 @@
     outline: none;
     border-radius: 3px;
     padding: 2px 8px;
+    margin-right: 5px;
 }
 .detedd svg{
     width: 14px;
     color: red;
+}
+
+.Edit{
+    background-color: #ddddde;
+    border: none;
+    outline: none;
+    border-radius: 3px;
+    padding: 2px 8px;
+    margin-right: 5px;
+}
+.Edit svg{
+    width: 14px;
 }

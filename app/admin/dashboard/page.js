@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import '../dashboard/AdminDashboard.css';
-import {  Trash2 } from 'lucide-react';
+import { Trash2, SquarePen } from 'lucide-react';
 import {
   FileClock,
   UserCheck,
@@ -13,11 +13,14 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import EditUserModal from './EditUserModal';
+import { toast } from 'react-hot-toast';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingUser, setEditingUser] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -40,7 +43,7 @@ export default function AdminDashboard() {
       setJobs(Array.isArray(dataJobs) ? dataJobs : []);
     } catch (err) {
       console.error(err);
-      alert('Error fetching data');
+      toast.error('Failed to update user ❌');
     } finally {
       setLoading(false);
     }
@@ -60,14 +63,14 @@ export default function AdminDashboard() {
       });
 
       if (res.ok) {
-        alert("User deleted successfully");
+        toast.success('User deleted successfully');
         fetchData();
       } else {
-        alert("Failed to delete user");
+        toast.error('Failed to delete user');
       }
     } catch (err) {
       console.error("Delete user error:", err);
-      alert("Error deleting user");
+         toast.error('Error deleting user');
     }
   }
 
@@ -172,9 +175,23 @@ export default function AdminDashboard() {
               <td className="table-cell">
                 <button
                   onClick={() => handleDeleteUser(user._id)}
-                 className="detedd">
-                              <Trash2 />
+                  className="detedd">
+                  <Trash2 />
                 </button>
+                <button className="Edit" onClick={() => setEditingUser(user)}>
+                  <SquarePen />
+                </button>
+                {editingUser && (
+                  <EditUserModal
+                    user={editingUser}
+                    onClose={() => setEditingUser(null)}
+                    onSave={() => {
+                      setEditingUser(null);
+                      fetchData(); // refresh user list
+                    }}
+                  />
+                )}
+
               </td>
             </>
           )}

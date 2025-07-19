@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '@/app/components/Sidebar';
 import Topbar from '@/app/components/Topbar';
 import '../pending-job-approvals/PendingJobsPage.css';
+import {toast} from 'react-hot-toast'
 
 export default function PendingJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -54,12 +55,12 @@ export default function PendingJobsPage() {
         const errData = await res.json();
         alert(errData.message || 'Error updating job');
       } else {
-        alert(`Job ${approve ? 'approved' : 'rejected'} successfully`);
+        toast.success(`Job ${approve ? 'approved' : 'rejected'} successfully`)
         fetchJobs();
       }
     } catch (err) {
       console.error(err);
-      alert('Network error');
+      toast.error('Network error')
     } finally {
       setActionLoading(null);
     }

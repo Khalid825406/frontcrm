@@ -5,6 +5,7 @@ import axios from 'axios';
 import styles from './NewCreateJobPage.module.css';
 import Sidebar from '@/app/components/Sidebar';
 import Topbar from '@/app/components/Topbar';
+import { toast } from 'react-hot-toast';
 
 export default function NewCreateJobPage() {
   const [formData, setFormData] = useState({
@@ -108,7 +109,7 @@ export default function NewCreateJobPage() {
         },
       });
 
-      alert('Job submitted successfully for admin approval');
+      toast.success('Job submitted successfully for admin approval')
 
       setFormData({
         customerName: '',

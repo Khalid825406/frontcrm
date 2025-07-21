@@ -1,4 +1,3 @@
-
 .pageWrapper {
   display: flex;
   flex-direction: row;
@@ -6,6 +5,7 @@
   background: #f9fafb;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 .sidebar {
   width: 220px;
   flex-shrink: 0;
@@ -24,8 +24,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   width: calc(100% - 220px);
+  min-height: 100vh;
 }
 
 .topbar {
@@ -41,14 +41,15 @@
 }
 
 .formWrapper {
-  padding: 24px 16px;
   flex: 1;
+  margin: 70px auto;
+  padding: 24px;
   background: #fff;
   border-radius: 8px;
-  margin: 70px auto;
+  max-width: 960px;
   width: 100%;
-  max-width: 950px;
   box-sizing: border-box;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .formGrid {
@@ -144,25 +145,20 @@
   background-color: #f7f7f7;
 }
 
-/* ✅ Mobile Responsiveness */
-@media (max-width: 768px) {
-  .pageWrapper {
-    flex-direction: column;
+/* ✅ Tablet & Mobile Support */
+@media (max-width: 1024px) {
+  .mainContent {
+    margin-left: 0;
+    width: 100%;
   }
 
   .sidebar {
     display: none;
   }
 
-  .mainContent {
-    margin-left: 0;
-    width: 100%;
-  }
-
   .formWrapper {
-    margin: 80px 0px 20px;
+    margin: 80px 16px 24px;
     padding: 16px;
-    width: 100%;
   }
 
   .formGrid {

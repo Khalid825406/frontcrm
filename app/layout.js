@@ -1,6 +1,7 @@
 
 import { Poppins, Roboto, Lora, Open_Sans, Sansation } from 'next/font/google'
 import { Toaster } from 'react-hot-toast';
+import './globals.css';
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] })
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '700'] })
 

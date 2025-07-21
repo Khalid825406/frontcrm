@@ -112,7 +112,12 @@
   border-radius: 6px;
   margin-bottom: 16px;
 }
-
+.accordion-container{
+  margin-left: 24px;
+}
+.maininput{
+  margin-left: 24px;
+}
 .accordion-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

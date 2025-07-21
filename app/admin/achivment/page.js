@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../achivment/achivment.css';
+import './achivment.css';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 
@@ -23,12 +23,9 @@ export default function TechnicianLeaderboard() {
   }, []);
 
   return (
-    <div className="dashboard-layout">
-      <div className="sidebar-wrapper">
-        <Sidebar role="admin" />
-      </div>
-
-      <div className="content-wrapper">
+    <div className="layout">
+      <Sidebar role="admin" />
+      <div className="main-content">
         <Topbar username="admin" />
         <div className="leaderboard-container">
           <h1 className="leaderboard-heading">🏆 Leaderboard</h1>
@@ -77,8 +74,6 @@ export default function TechnicianLeaderboard() {
                     </tr>
                   ))
                 )}
-
-
               </tbody>
             </table>
           </div>

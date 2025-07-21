@@ -157,6 +157,7 @@ export default function AllOtherJobsPage() {
               padding: 20,
               boxShadow: '0 1px 5px rgba(0,0,0,0.1)',
               overflowX: 'auto',
+              marginLeft:'24px'
             }}
           >
             <div style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>

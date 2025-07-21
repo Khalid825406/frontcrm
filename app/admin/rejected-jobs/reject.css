@@ -3,3 +3,71 @@
         margin-left: 0px !important;
     }
 }
+.rejected-container {
+  display: flex;
+  height: 100vh;
+}
+
+.rejected-main {
+  flex: 1;
+  background-color: #f9f9f9;
+  margin-left: 240px;
+  padding: 20px;
+  padding-top: 60px;
+  overflow-y: auto;
+}
+
+.rejected-content {
+  max-width: 1400px;
+  margin: 24px 24px;
+}
+
+.rejected-heading {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.rejected-loading,
+.rejected-empty {
+  padding: 20px;
+  font-size: 16px;
+}
+
+.rejected-table-wrapper {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.rejected-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+}
+
+.rejected-table thead {
+  background-color: #f2f2f2;
+}
+
+.rejected-table th {
+  text-align: left;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.rejected-table td {
+  padding: 10px 12px;
+  font-size: 14px;
+  white-space: nowrap;
+  border-top: 1px solid #e0e0e0;
+}
+
+.status-rejected {
+  color: #f44336;
+  font-weight: 600;
+}

@@ -1,15 +1,36 @@
-/* public/login/login.css or /styles/login.css (depends on path) */
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+/* Full page login background */
+.login-container {
+  background-color: #005bb5;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* For spacing on smaller screens */
+}
+
+/* Login form box */
 .container {
+  width: 100%;
   max-width: 380px;
-  margin: 70px auto;
   padding: 30px 25px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: auto;
 }
 
+/* Heading */
 h2 {
   text-align: center;
   margin-bottom: 30px;
@@ -18,14 +39,15 @@ h2 {
   font-size: 28px;
 }
 
+/* Form layout */
 form {
   display: flex;
   flex-direction: column;
 }
 
+/* Input fields */
 input {
   width: 100%;
-  box-sizing: border-box;
   padding: 12px 15px;
   margin-bottom: 18px;
   font-size: 16px;
@@ -34,6 +56,13 @@ input {
   transition: border-color 0.3s ease;
 }
 
+input:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 6px rgba(0, 112, 243, 0.3);
+}
+
+/* Password toggle */
 .password-wrapper {
   position: relative;
   margin-bottom: 18px;
@@ -42,18 +71,13 @@ input {
 .toggle-icon {
   position: absolute;
   right: 12px;
-  top: 40%;
+  top: 42%;
   transform: translateY(-50%);
   cursor: pointer;
   color: #555;
 }
 
-input:focus {
-  outline: none;
-  border-color: #0070f3;
-  box-shadow: 0 0 6px rgba(0, 112, 243, 0.3);
-}
-
+/* Button */
 button {
   background-color: #0070f3;
   color: white;
@@ -75,6 +99,7 @@ button:hover:not(:disabled) {
   background-color: #005bb5;
 }
 
+/* Error message */
 .error {
   color: #d32f2f;
   margin-top: 15px;
@@ -82,6 +107,7 @@ button:hover:not(:disabled) {
   font-weight: 600;
 }
 
+/* Register / Forgot links */
 .links {
   display: flex;
   justify-content: space-between;
@@ -94,4 +120,59 @@ button:hover:not(:disabled) {
 .links a {
   color: #0070f3;
   text-decoration: none;
+}
+
+/* ---------- Responsive Styling ---------- */
+
+@media (max-width: 480px) {
+  .container {
+    padding: 25px 20px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  input {
+    font-size: 15px;
+  }
+
+  button {
+    font-size: 16px;
+    padding: 11px;
+  }
+
+  .links {
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+  }
+}
+.download-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.android-download-btn {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #00b894, #0984e3);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: transform 0.2s ease-in-out;
+}
+
+.android-download-btn:hover {
+  transform: scale(1.03);
 }

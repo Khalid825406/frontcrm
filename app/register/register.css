@@ -1,0 +1,102 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Full-page background wrapper */
+.register {
+  background-color: #005bb5;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* For mobile spacing */
+}
+
+/* Form container */
+.register-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.register-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 26px;
+  color: #222;
+}
+
+/* Form styling */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.register-form label {
+  font-weight: 500;
+}
+
+.register-form input,
+.register-form select {
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+  margin-bottom: 0px;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  border-color: #0070f3;
+}
+
+/* Submit button */
+.register-form .primary {
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-form .primary:hover {
+  background-color: #0363d1;
+}
+
+/* Message styles */
+.error {
+  color: #d93025;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.success {
+  color: #188038;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}

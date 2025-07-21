@@ -1,0 +1,35 @@
+
+/* InstallPrompt.css */
+
+.install-button {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #00b894, #0984e3);
+  color: #fff;
+  border-radius: 50px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.install-popup {
+  margin-top: 20px;
+  background: #fff8e1;
+  padding: 15px;
+  border: 1px solid #ffd54f;
+  border-radius: 8px;
+  max-width: 300px;
+  font-size: 15px;
+}
+
+.popup-close-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+}

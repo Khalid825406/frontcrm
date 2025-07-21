@@ -112,6 +112,7 @@ export default function AdminRejectedJobsPage() {
               </div>
             ))}
           </div>
+
         )}
 
         {!loading && filteredJobs.length === 0 && !error && (
@@ -126,8 +127,8 @@ export default function AdminRejectedJobsPage() {
                 onClick={() => toggleAccordion(j._id)}
               >
                 <div className="accordion-title">
-                   <div className='acordion-name'>Customer Name : {j.customerName} </div> 
-                   <div className='acordion-name'>Location : {j.location} </div>
+                  <div className='acordion-name'>Customer Name : {j.customerName} </div>
+                  <div className='acordion-name'>Location : {j.location} </div>
                 </div>
                 <span>
                   {activeJobId === j._id ? <Minus size={18} /> : <Plus size={18} />}

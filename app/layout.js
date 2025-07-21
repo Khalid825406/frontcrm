@@ -1,7 +1,6 @@
 
 import { Poppins, Roboto, Lora, Open_Sans, Sansation } from 'next/font/google'
 import { Toaster } from 'react-hot-toast';
-
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] })
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '700'] })
 
@@ -35,8 +34,8 @@ export default function RootLayout({ children }) {
           position="top-center"
           toastOptions={{
             style: {
-              background: '#333',
-              color: '#fff',
+              background: '#fff',
+              color: '#000',
               fontSize: '14px',
             },
           }}

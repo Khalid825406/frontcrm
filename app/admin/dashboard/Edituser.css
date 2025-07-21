@@ -44,6 +44,10 @@
   padding: 4px;
   border-radius: 50%;
   transition: background-color 0.2s ease;
+  color: #000 !important;
+}
+.close-btn svg{
+  color: #000 !important;
 }
 
 .close-btn:hover {
@@ -98,5 +102,8 @@
 .save-btn:hover {
   background-color: #0056b3;
 }
-
-
+@media only screen and (max-width: 600px){
+  .modal-box{
+    width: 300px;
+  }
+}

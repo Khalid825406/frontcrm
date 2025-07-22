@@ -64,9 +64,15 @@
         width: 100% !important;
     }
     .search-box{
-        width: 100% !important;
+        margin: 30px auto !important;
+        background-color: #ccc !important;
+        width: 90% !important;
         box-sizing: border-box;
     }
+    .meicsdasw{
+        padding: 0px 20px;
+    }
+ 
 }
 
 .shimmer-card .shimmer-box,

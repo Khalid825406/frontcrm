@@ -159,6 +159,7 @@ export default function AllOtherJobsPage() {
               overflowX: 'auto',
               marginLeft:'24px'
             }}
+            className='newall'
           >
             <div style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
               <input

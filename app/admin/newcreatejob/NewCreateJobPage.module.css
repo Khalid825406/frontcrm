@@ -157,8 +157,8 @@
   }
 
   .formWrapper {
-    margin: 80px 16px 24px;
     padding: 16px;
+      width: 90%;
   }
 
   .formGrid {

@@ -196,6 +196,7 @@
 .card-container{
   display: block;
   padding: 0px;
+  margin-bottom: 10px;
 }
 .filters{
   width: 100%;
@@ -205,6 +206,12 @@
 }
 .filter-select{
      min-width: 0px;
+}
+.content-wrapper{
+  margin-left: 0px;
+}
+.main-container{
+   padding: 75px 20px 20px;
 }
 }
 /* Skeleton loader shared shimmer effect */

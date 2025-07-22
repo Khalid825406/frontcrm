@@ -62,8 +62,16 @@
         width: 100% !important;
     }
     .search-box{
-        width: 100% !important;
+        background-color: #ccc !important;
+        margin: 30px auto !important;
+        width: 90% !important;
         box-sizing: border-box;
+    }
+    .search-box input{
+        width: 40%;
+    }
+    .meicsdasw{
+        padding: 0px 20px;
     }
 }
 

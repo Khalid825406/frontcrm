@@ -227,11 +227,24 @@
   left: 15px;
   z-index: 1001;
 }
+/* Scrollbar for WebKit browsers (Chrome, Edge, Safari) */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* greyish thumb */
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background-color: #1f2937; /* same as sidebar background */
+}
 
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    top: -23px;
+    top: 0px;
   }
 
   .sidebar.open {

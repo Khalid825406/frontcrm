@@ -1,7 +1,7 @@
 @media (max-width: 768px){
 .assignman {
     margin-left: 0px !important;
-    padding: 0px !important;
+    padding: 18px !important;
     flex-grow: 1;
     margin-top: 40px;
 }
@@ -16,6 +16,12 @@
 }
 .acordion-name{
     font-size: 12px !important;
+}
+.maininput{
+  margin-left: 0px !important;
+}
+.accordion-container{
+  margin-left: 0px !important;
 }
 }
 .maininput{

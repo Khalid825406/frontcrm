@@ -69,6 +69,7 @@
     }
     .search-box input{
         width: 40%;
+        color: #000 !important;
     }
     .meicsdasw{
         padding: 0px 20px;

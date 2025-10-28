@@ -1,246 +1,284 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Sidebar from '../../components/Sidebar';
-import Topbar from '../../components/Topbar';
-import '../approved-jobs/approval.css';
 import { X } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import AdminLayout from '@/app/components/AdminLayout';
+import './approval.css';
 
 export default function ApprovedJobsPage() {
   const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [technicians, setTechnicians] = useState([]);
+  const [techs, setTechs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [priorityFilter, setPriorityFilter] = useState('All');
+  const [search, setSearch] = useState('');
+  const [priority, setPriority] = useState('All');
+  const [techSearch, setTechSearch] = useState('');
 
+  /* ---------- data ---------- */
   useEffect(() => {
-    fetchApprovedJobs();
+    fetchJobs();
   }, []);
 
   useEffect(() => {
-    filterJobs();
-  }, [searchTerm, priorityFilter, jobs]);
+    const f = jobs.filter((j) => {
+      const m =
+        j.customerName.toLowerCase().includes(search.toLowerCase()) ||
+        j.customerPhone.includes(search) ||
+        j.workType.toLowerCase().includes(search.toLowerCase()) ||
+        j.location.toLowerCase().includes(search.toLowerCase());
+      const p = priority === 'All' || j.priority.toLowerCase() === priority.toLowerCase();
+      return m && p;
+    });
+    setFiltered(f);
+  }, [search, priority, jobs]);
 
-  const fetchApprovedJobs = async () => {
+  const fetchJobs = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      const { data } = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      const approved = res.data.filter((job) => {
-        const timeline = job.statusTimeline || [];
-        const lastStatus = timeline.length > 0 ? timeline[timeline.length - 1].status : null;
-
-        return job.approved && !job.rejected && (!job.assignedTo || lastStatus === 'Rejected');
-      }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      
+      const approved = data
+        .filter((j) => {
+          const t = j.statusTimeline || [];
+          const last = t.length ? t[t.length - 1].status : null;
+          return j.approved && !j.rejected && (!j.assignedTo || last === 'Rejected');
+        })
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setJobs(approved);
-    } catch (err) {
-      console.error(err);
-      alert('❌ Failed to fetch approved jobs');
+    } catch {
+      toast.error('Failed to fetch approved jobs');
     } finally {
       setLoading(false);
     }
   };
 
-  const filterJobs = () => {
-    const filtered = jobs.filter((job) => {
-      const matchesSearch =
-        job.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.customerPhone.includes(searchTerm) ||
-        job.workType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.location.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesPriority =
-        priorityFilter === 'All' || job.priority.toLowerCase() === priorityFilter.toLowerCase();
-
-      return matchesSearch && matchesPriority;
-    });
-
-    setFilteredJobs(filtered);
-  };
-
-  const fetchTechnicians = async () => {
+  const fetchTechs = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-technicians', {
+      const { data } = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-technicians', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setTechnicians(res.data);
+      setTechs(data);
       setShowModal(true);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to fetch technicians');
+    } catch {
+      toast.error('Failed to fetch technicians');
     }
   };
 
   const handleAssign = (jobId) => {
     setSelectedJobId(jobId);
-    fetchTechnicians();
+    fetchTechs();
   };
 
-  const handleAssignTechnician = async (technicianId) => {
+  const confirmAssign = async (techId) => {
     const token = localStorage.getItem('token');
     try {
       await axios.post(
         'https://new-crm-sdcn.onrender.com/api/admin/assign-job',
-        { jobId: selectedJobId, technicianId },
+        { jobId: selectedJobId, technicianId: techId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('Assigned successfully');
+      toast.success('Technician assigned');
       setShowModal(false);
-      setSearchTerm('');
-      fetchApprovedJobs();
-    } catch (err) {
-      console.error(err);
-      alert('❌ Failed to assign technician');
+      fetchJobs();
+    } catch {
+      toast.error('Assignment failed');
     }
   };
 
+  /* ---------- render ---------- */
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <Sidebar role="admin" />
-      <main className="main-container">
-        <Topbar username="Admin" />
-        <div className="content-wrapper">
-          <div className="filters">
-            <input
-              type="text"
-              placeholder="Search jobs..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="filter-input"
-            />
+    <AdminLayout>
+      <div className="aj-shell">
+        <header className="aj-header">
+          <h1 className="aj-title">Approved Jobs</h1>
+          <p className="aj-subtitle">Jobs ready for technician assignment</p>
+        </header>
 
-            <select
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="filter-select"
-            >
-              <option value="All">All Priorities</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
-          </div>
-
-          <JobCards jobs={filteredJobs} loading={loading} onAssign={handleAssign} />
+        <div className="aj-toolbar">
+          <input
+            type="text"
+            placeholder="Search jobs..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="aj-search"
+          />
+          <select value={priority} onChange={(e) => setPriority(e.target.value)} className="aj-filter">
+            <option value="All">All Priorities</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
         </div>
 
-        {showModal && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>Select Technician</h3>
-
-              <input
-                type="text"
-                placeholder="Search technician..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-
-              <ul className="technician-list">
-                {technicians
-                  .filter((tech) =>
-                    tech.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    tech.phone.includes(searchTerm)
-                  )
-                  .map((tech) => (
-                    <li key={tech._id}>
-                      <div>
-                        <div className="tech-info">{tech.username}</div>
-                        <div className="tech-phone">{tech.phone}</div>
-                      </div>
-                      <div>
-                        <button className="assign-btn" onClick={() => handleAssignTechnician(tech._id)}>
-                          Assign
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                  <X />
-                </button>
-              </ul>
-            </div>
-          </div>
+        {loading ? (
+          <Skeleton />
+        ) : filtered.length === 0 ? (
+          <Empty />
+        ) : (
+          <Table data={filtered} onAssign={handleAssign} />
         )}
-      </main>
+
+        {showModal && (
+          <Modal
+            techs={techs}
+            techSearch={techSearch}
+            setTechSearch={setTechSearch}
+            onSelect={confirmAssign}
+            onClose={() => setShowModal(false)}
+          />
+        )}
+      </div>
+    </AdminLayout>
+  );
+}
+
+/* ---------- sub-components ---------- */
+function Table({ data, onAssign }) {
+  return (
+    <div className="aj-table-wrap">
+      <table className="aj-table">
+        <thead>
+          <tr>
+            <th className="aj-shrink">Image</th> {/* image */}
+            <th>Customer</th>
+            <th>Work Type</th>
+            <th>Date / Time</th>
+            <th>Priority</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th className="aj-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((j) => {
+            const isRejected = j.statusTimeline?.some((s) => s.status === 'Rejected');
+            const img = j.images?.[0]
+              ? j.images[0].startsWith('http')
+                ? j.images[0]
+                : `https://new-crm-sdcn.onrender.com${j.images[0]}`
+              : '/placeholder.jpg';
+            return (
+              <tr key={j._id}>
+                <td data-label="Image" className="aj-shrink">
+                  <img src={img} alt="" className="aj-thumb" />
+                </td>
+                <td data-label="Customer">
+                  <span className="aj-customer">{j.customerName}</span>
+                  <span className="aj-phone">{j.customerPhone}</span>
+                </td>
+                <td data-label="Work Type">{j.workType}</td>
+                <td data-label="Date / Time">{new Date(j.datetime).toLocaleString()}</td>
+                <td data-label="Priority">
+                  <PriorityBadge val={j.priority} />
+                </td>
+                <td data-label="Location">{j.location}</td>
+                <td data-label="Status">
+                  <span className={`aj-status ${isRejected ? 'rejected' : 'approved'}`}>
+                    {isRejected ? 'Rejected by Tech' : 'Approved'}
+                  </span>
+                </td>
+                <td data-label="Actions" className="aj-right">
+                  <button
+                    onClick={() => onAssign(j._id)}
+                    className={`aj-btn ${isRejected ? 'aj-reassign' : 'aj-assign'}`}
+                  >
+                    {isRejected ? 'Re-assign' : 'Assign'}
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
 
-// Skeleton Loader Component
-function JobCardSkeleton() {
+function PriorityBadge({ val }) {
+  const map = {
+    low: { bg: '#dbeafe', color: '#1e40af' },
+    medium: { bg: '#fef3c7', color: '#d97706' },
+    high: { bg: '#fee2e2', color: '#dc2626' },
+  };
+  const style = map[val?.toLowerCase()] || map.medium;
   return (
-    <div className="card-container">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="job-card skeleton-card">
-          <div className="skeleton-image shimmer"></div>
-          <div className="job-details">
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-line shimmer medium" />
-            <div className="skeleton-line shimmer short" />
-            <div className="skeleton-button shimmer" />
-          </div>
+    <span className="aj-badge" style={{ background: style.bg, color: style.color }}>
+      {val}
+    </span>
+  );
+}
+
+function Skeleton() {
+  return (
+    <div className="aj-skeleton">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="aj-skel-row">
+          <div className="aj-skel aj-skel-thumb" />
+          <div className="aj-skel" style={{ width: '25%' }} />
+          <div className="aj-skel" style={{ width: '15%' }} />
+          <div className="aj-skel" style={{ width: '20%' }} />
+          <div className="aj-skel" style={{ width: '10%' }} />
+          <div className="aj-skel" style={{ width: '15%' }} />
+          <div className="aj-skel" style={{ width: '10%' }} />
+          <div className="aj-skel" style={{ width: '80px' }} />
         </div>
       ))}
     </div>
   );
 }
 
+function Empty() {
+  return (
+    <div className="aj-empty">
+      <svg width="80" height="80" fill="none" viewBox="0 0 24 24">
+        <path stroke="#cbd5e1" strokeWidth="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <h3>All caught up</h3>
+      <p>No approved jobs waiting for assignment.</p>
+    </div>
+  );
+}
 
-
-function JobCards({ jobs, loading, onAssign }) {
-  if (loading) return <JobCardSkeleton />;
-  if (jobs.length === 0) return <p style={{ padding: 20 }}>No jobs found.</p>;
+function Modal({ techs, techSearch, setTechSearch, onSelect, onClose }) {
+  const filtered = techs.filter(
+    (t) =>
+      t.username.toLowerCase().includes(techSearch.toLowerCase()) ||
+      t.phone.includes(techSearch)
+  );
 
   return (
-    <div className="card-container">
-      {jobs.map((job) => {
-        const isRejected = job.statusTimeline?.some((s) => s.status === 'Rejected');
-        return (
-          <div className="job-card" key={job._id}>
-            <img
-              src={
-                job.images?.[0]?.startsWith('http')
-                  ? job.images[0]
-                  : `https://new-crm-sdcn.onrender.com${job.images?.[0]}`
-              }
-              alt={job.customerName}
-              className="job-image"
-            />
-            <div className="job-details">
-              <h3>Customer Name : {job.customerName}</h3>
-              <p><strong>Phone:</strong> {job.customerPhone}</p>
-              <p><strong>Work Type:</strong> {job.workType}</p>
-              <p><strong>Department:</strong> {job.Department}</p>
-              <p><strong>Location:</strong> {job.location}</p>
-              <p><strong>Date/Time:</strong> {new Date(job.datetime).toLocaleString()}</p>
-              <p><strong>Reason:</strong> {job.reason}</p>
-              <p><strong>Priority:</strong> {job.priority}</p>
-              <p><strong>Remarks:</strong> {job.remarks}</p>
-              <p className="job-status">Status: {isRejected ? 'Rejected by Technician' : 'Approved'}</p>
-              <button className="assign-button" onClick={() => onAssign(job._id)}>
-                {isRejected ? 'Reassign Technician' : 'Assign'}
+    <div className="aj-modal-overlay">
+      <div className="aj-modal">
+        <button className="aj-modal-close" onClick={onClose}>
+          <X size={20} />
+        </button>
+        <h3 className="aj-modal-title">Select Technician</h3>
+        <input
+          type="text"
+          placeholder="Search technician..."
+          value={techSearch}
+          onChange={(e) => setTechSearch(e.target.value)}
+          className="aj-modal-search"
+        />
+        <ul className="aj-modal-list">
+          {filtered.map((t) => (
+            <li key={t._id} className="aj-modal-item">
+              <div>
+                <div className="aj-modal-name">{t.username}</div>
+                <div className="aj-modal-phone">{t.phone}</div>
+              </div>
+              <button onClick={() => onSelect(t._id)} className="aj-modal-assign">
+                Assign
               </button>
-            </div>
-          </div>
-        );
-      })}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

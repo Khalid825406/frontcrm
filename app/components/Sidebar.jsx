@@ -22,6 +22,7 @@ import {
   CheckCheck,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 
 const Sidebar = ({ role }) => {
@@ -75,7 +76,9 @@ const Sidebar = ({ role }) => {
       </div>
 
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <h2 className="sidebar-title">MyApp</h2>
+        <div className="sidebar-title">
+           <h1>SULTAN CRM</h1>
+        </div>
         <nav className="sidebar-links">
           {links.map(({ href, label, icon: Icon }) => (
             <Link
@@ -89,6 +92,14 @@ const Sidebar = ({ role }) => {
             </Link>
           ))}
         </nav>
+
+         {/* fixed bottom logout */}
+        <div className="sidebar-footer">
+          <button className="sidebar-logout" onClick={() => { localStorage.removeItem('token'); window.location.href = '/login'; }}>
+            <LogOut size={20} />
+            <span>Logout</span>
+          </button>
+        </div>
       </aside>
     </>
   );

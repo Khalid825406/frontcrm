@@ -1,18 +1,29 @@
 /* ---------- page shell ---------- */
-.pj-container {
-  max-width: 1100px;
+.pa-container {
+  max-width: 1000px;
   margin: 0 auto;
   padding: 32px 24px;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ---------- header ---------- */
-.pj-header { margin-bottom: 24px; }
-.pj-title { font-size: 24px; font-weight: 600; color: #0f172a; margin: 0; }
-.pj-subtitle { font-size: 14px; color: #64748b; margin: 4px 0 0; }
+/* ---------- toast ---------- */
+.pa-toast {
+  background: #1e40af;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  animation: slide-down .3s ease;
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* ---------- table ---------- */
-.pj-table-wrap {
+.pa-table-wrap {
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -20,13 +31,13 @@
   box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 
-.pj-table {
+.pa-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-.pj-table th {
+.pa-table th {
   background: #f8fafc;
   padding: 14px 16px;
   text-align: left;
@@ -35,29 +46,29 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.pj-table td {
+.pa-table td {
   padding: 14px 16px;
   border-bottom: 1px solid #f1f5f9;
 }
 
-.pj-table tr:last-child td { border-bottom: none; }
+.pa-table tr:last-child td { border-bottom: none; }
 
-.pj-customer { font-weight: 500; color: #0f172a; }
-.pj-worktype { color: #475569; }
-.pj-right { text-align: right; }
-
-/* ---------- badge ---------- */
-.pj-badge {
+.pa-username { font-weight: 500; color: #0f172a; }
+.pa-role {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 500;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
+.pa-right { text-align: right; }
+
 /* ---------- buttons ---------- */
-.pj-actions { display: flex; gap: 8px; }
-.pj-btn {
+.pa-actions { display: flex; gap: 8px; }
+.pa-btn {
   border: none;
   border-radius: 6px;
   padding: 6px 14px;
@@ -67,20 +78,18 @@
   transition: background .15s, transform .1s;
 }
 
-.pj-approve { background: #10b981; color: #fff; }
-.pj-approve:hover { background: #059669; }
-.pj-reject { background: #ef4444; color: #fff; }
-.pj-reject:hover { background: #dc2626; }
-.pj-btn:disabled { opacity: .6; cursor: not-allowed; }
+.pa-approve { background: #10b981; color: #fff; }
+.pa-approve:hover { background: #059669; }
+.pa-reject { background: #ef4444; color: #fff; }
+.pa-reject:hover { background: #dc2626; }
 
 /* ---------- skeleton ---------- */
-.pj-skeleton { display: flex; flex-direction: column; gap: 12px; }
-.pj-skel-row { display: flex; gap: 16px; align-items: center; }
-.pj-skel {
-  height: 20px;
+.pa-skeleton { display: flex; flex-direction: column; gap: 12px; }
+.pa-skel-row {
+  height: 48px;
   background: linear-gradient(90deg, #f1f5f9 40%, #e2e8f0 50%, #f1f5f9 60%);
   background-size: 200% 100%;
-  border-radius: 4px;
+  border-radius: 6px;
   animation: shimmer 1.5s infinite;
 }
 
@@ -90,32 +99,35 @@
 }
 
 /* ---------- empty ---------- */
-.pj-empty {
+.pa-empty {
   text-align: center;
   padding: 60px 20px;
   color: #94a3b8;
 }
-.pj-empty h3 { margin: 16px 0 4px; font-size: 18px; color: #475569; }
-.pj-empty p { font-size: 14px; }
+.pa-empty h3 { margin: 16px 0 4px; font-size: 18px; color: #475569; }
+.pa-empty p { font-size: 14px; }
 
 /* ---------- mobile row-card ---------- */
 @media (max-width: 768px) {
-  .pj-table thead { display: none; }
-  .pj-table tr {
+  .pa-table thead { display: none; }
+  .pa-table tr {
     display: block;
     padding: 16px;
     border-bottom: 1px solid #e2e8f0;
   }
-  .pj-table td {
+  .pa-table td {
     display: flex;
     justify-content: space-between;
     padding: 6px 0;
     border: none;
   }
-  .pj-table td::before {
+  .pa-table td::before {
     content: attr(data-label);
     font-weight: 600;
     color: #64748b;
   }
-  .pj-actions { justify-content: flex-start; }
+  .pa-table td[data-label="User"]::before { content: "User"; }
+  .pa-table td[data-label="Role"]::before { content: "Role"; }
+  .pa-table td[data-label="Actions"]::before { content: ""; display: none; }
+  .pa-actions { justify-content: flex-start; }
 }

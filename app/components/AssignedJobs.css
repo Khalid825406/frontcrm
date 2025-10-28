@@ -176,7 +176,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  padding: 20px 10px;
+  padding: 20px 0px 0px 0px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -186,17 +186,21 @@
 }
 
 .sidebar-title {
-  margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  color: #fff;
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
 }
 
 .sidebar-links {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
+  padding: 0px 15px;
 }
 
 .sidebar-link {
@@ -228,16 +232,16 @@
   z-index: 1001;
 }
 /* Scrollbar for WebKit browsers (Chrome, Edge, Safari) */
-.sidebar::-webkit-scrollbar {
+.sidebar-links::-webkit-scrollbar {
   width: 8px;
 }
 
-.sidebar::-webkit-scrollbar-thumb {
+.sidebar-links::-webkit-scrollbar-thumb {
   background-color: #4b5563; /* greyish thumb */
   border-radius: 10px;
 }
 
-.sidebar::-webkit-scrollbar-track {
+.sidebar-links::-webkit-scrollbar-track {
   background-color: #1f2937; /* same as sidebar background */
 }
 
@@ -265,30 +269,6 @@
     margin-left: 0px !important;
   }
 }
-.topbar {
-  height: 60px;
-  background-color: #1f2937;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  position: fixed;
-  top: 0;
-  left: 260px;
-  right: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: left 0.3s ease;
-}
-
-.topbar-left {
-  font-size: 16px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 
 .logout-btn {
   background-color: #ef4444;
@@ -311,4 +291,32 @@
     left: 0;
     padding-left: 100px;
   }
+}
+
+.sidebar-logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-logout:hover {
+  background: rgba(220, 38, 38, 0.95);
+}
+
+.sidebar-title h1{
+  font-size: 32px;
+}
+.sidebar-footer{
+  padding: 15px 15px;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
 }

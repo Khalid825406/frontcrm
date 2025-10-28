@@ -12,7 +12,7 @@ export default function AdminLayout({ children }) {
         style={{
           flex: 1,
           backgroundColor: '#f9f9f9',
-          marginLeft: 240,
+          marginLeft: 284,
           paddingTop: 60,
           overflowY: 'auto',
           height: '100vh',

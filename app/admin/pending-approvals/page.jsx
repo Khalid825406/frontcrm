@@ -1,18 +1,17 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import AdminLayout from '../../components/AdminLayout';
+import './PendingApprovals.css';
 
 export default function PendingApprovalsPage() {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    fetchPendingUsers();
-  }, []);
+  useEffect(() => { fetchPendingUsers(); }, []);
 
   async function fetchPendingUsers() {
+    setLoading(true);
     const token = localStorage.getItem('token');
     try {
       const res = await fetch('https://new-crm-sdcn.onrender.com/api/admin/all-users', {
@@ -20,141 +19,101 @@ export default function PendingApprovalsPage() {
       });
       const data = await res.json();
       setPendingUsers(Array.isArray(data) ? data.filter(u => !u.approved && !u.rejected) : []);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      setMessage('Failed to load users');
     } finally {
       setLoading(false);
     }
   }
 
-  async function approveUser(id) {
+  async function actionUser(id, action) {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`https://new-crm-sdcn.onrender.com/api/admin/approve-user/${id}`, {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setMessage(data.message || 'User approved successfully');
+      const res = await fetch(
+        `https://new-crm-sdcn.onrender.com/api/admin/${action}-user/${id}`,
+        { method: action === 'approve' ? 'PUT' : 'DELETE', headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!res.ok) throw new Error();
+      setMessage(`User ${action}d successfully`);
       fetchPendingUsers();
       setTimeout(() => setMessage(''), 3000);
     } catch {
-      setMessage('Error approving user.');
-    }
-  }
-
-  async function rejectUser(id) {
-    const token = localStorage.getItem('token');
-    try {
-      const res = await fetch(`https://new-crm-sdcn.onrender.com/api/admin/reject-user/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setMessage(data.message || 'User rejected successfully');
-      fetchPendingUsers();
-      setTimeout(() => setMessage(''), 3000);
-    } catch {
-      setMessage('Error rejecting user.');
+      setMessage(`Error ${action}ing user`);
     }
   }
 
   return (
     <AdminLayout>
-      <div
-        style={{
-          maxWidth: 968,
-          margin: '0 auto',
-          backgroundColor: 'white',
-          padding: 20,
-          borderRadius: 10,
-          boxShadow: '0 1px 5px rgba(0,0,0,0.1)',
-        }}
-      >
-
-        {message && (
-          <p
-            style={{
-              backgroundColor: '#e0f7fa',
-              color: '#00796b',
-              padding: '10px 15px',
-              borderRadius: 6,
-              marginBottom: 20,
-              fontWeight: 500,
-            }}
-          >
-            {message}
-          </p>
-        )}
+      
+      <section className="pa-container">
+        <header className="pj-header">
+          <h1 className="pj-title">Pending Users Approvals</h1>
+          <p className="pj-subtitle">Review and approve Users before they go live.</p>
+        </header>
+        {message && <div className="pa-toast">{message}</div>}
 
         {loading ? (
-          <p>Loading...</p>
+          <Skeleton />
         ) : pendingUsers.length === 0 ? (
-          <p>No users pending approval.</p>
+          <Empty />
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
-              <thead>
-                <tr style={{ backgroundColor: '#f2f2f2' }}>
-                  <th style={thStyle}>Username</th>
-                  <th style={thStyle}>Role</th>
-                  <th style={thStyle}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingUsers.map((user) => (
-                  <tr key={user._id} style={{ borderBottom: '1px solid #ddd' }}>
-                    <td style={tdStyle}>{user.username}</td>
-                    <td style={tdStyle}>{user.role}</td>
-                    <td style={tdStyle}>
-                      <button style={approveBtnStyle} onClick={() => approveUser(user._id)}>
-                        Approve
-                      </button>
-                      <button style={rejectBtnStyle} onClick={() => rejectUser(user._id)}>
-                        Reject
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table data={pendingUsers} onAction={actionUser} />
         )}
-      </div>
+      </section>
     </AdminLayout>
   );
 }
 
-const thStyle = {
-  textAlign: 'left',
-  padding: '12px',
-  fontWeight: 600,
-  fontSize: 14,
-  backgroundColor: '#f8f8f8',
-  whiteSpace: 'nowrap',
-};
+function Table({ data, onAction }) {
+  return (
+    <div className="pa-table-wrap">
+      <table className="pa-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Password</th>
+            <th className="pa-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((u) => (
+            <tr key={u._id}>
+              <td data-label="User"><span className="pa-username">{u.username}</span></td>
+              <td data-label="Role"><span className="pa-role">{u.role}</span></td>
+              <td data-label="Phone"><span className="pa-username">{u.phone}</span></td>
+              <td>*****</td>
+              <td data-label="Actions" className="pa-right">
+                <div className="pa-actions">
+                  <button className="pa-btn pa-approve" onClick={() => onAction(u._id, 'approve')}>Approve</button>
+                  <button className="pa-btn pa-reject" onClick={() => onAction(u._id, 'reject')}>Reject</button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
-const tdStyle = {
-  padding: '10px 12px',
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-};
+function Skeleton() {
+  return (
+    <div className="pa-skeleton">
+      {Array.from({ length: 6 }).map((_, i) => <div key={i} className="pa-skel-row" />)}
+    </div>
+  );
+}
 
-const approveBtnStyle = {
-  backgroundColor: '#4CAF50',
-  color: 'white',
-  border: 'none',
-  borderRadius: 4,
-  padding: '6px 12px',
-  marginRight: 8,
-  cursor: 'pointer',
-};
-
-const rejectBtnStyle = {
-  backgroundColor: '#f44336',
-  color: 'white',
-  border: 'none',
-  borderRadius: 4,
-  padding: '6px 12px',
-  cursor: 'pointer',
-};
+function Empty() {
+  return (
+    <div className="pa-empty">
+      <svg width="80" height="80" fill="none" viewBox="0 0 24 24">
+        <path stroke="#cbd5e1" strokeWidth="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <h3>Nothing pending</h3>
+      <p>All users have been reviewed. Check back later.</p>
+    </div>
+  );
+}

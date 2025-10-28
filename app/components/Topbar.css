@@ -1,0 +1,103 @@
+/* ---------- glass topbar ---------- */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 280px;              /* match sidebar width */
+  right: 0;
+  height: 64px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  z-index: 1000;
+  transition: left 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e2e8f0;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.topbar-left strong {
+  color: #fff;
+  font-weight: 600;
+}
+.topbar-icon {
+  color: #94a3b8;
+}
+
+/* ---- search ---- */
+.topbar-search {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+  margin: 0 24px;
+}
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px 10px 42px;
+  color: #fff;
+  font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.search-input::placeholder {
+  color: #94a3b8;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* ---- logout ---- */
+.topbar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.topbar-logout:hover {
+  background: rgba(220, 38, 38, 0.95);
+  transform: translateY(-1px);
+}
+.topbar-logout:active {
+  transform: translateY(0);
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 1023px) {
+  .topbar {
+    left: 0;
+    padding: 0 20px;
+  }
+  .topbar-search {
+    max-width: 220px;
+    margin: 0 12px;
+  }
+}

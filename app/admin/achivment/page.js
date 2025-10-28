@@ -2,91 +2,99 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import AdminLayout from '@/app/components/AdminLayout';
 import './achivment.css';
-import Sidebar from '../../components/Sidebar';
-import Topbar from '../../components/Topbar';
 
 export default function TechnicianLeaderboard() {
-  const [achievements, setAchievements] = useState([]);
+  const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get('https://new-crm-sdcn.onrender.com/api/technician/achievements')
-      .then(res => {
-        setAchievements(res.data);
+      .then(({ data }) => {
+        setList(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
   return (
-    <div className="layout">
-      <Sidebar role="admin" />
-      <div className="main-content">
-        <Topbar username="admin" />
-        <div className="leaderboard-container">
-          <h1 className="leaderboard-heading">🏆 Leaderboard</h1>
+    <AdminLayout>
+      <main className="lb-wrap">
+        <div className="lb-container">
+          <header className="lb-header">
+            <h1 className="lb-title">Technician Leaderboard</h1>
+            <p className="lb-sub">Top performers this month</p>
+          </header>
 
-          <div className="leaderboard-table-wrapper">
-            <table className="leaderboard-table">
+          <div className="lb-table-wrapper">
+            <table className="lb-table">
               <thead>
-                <tr className="leaderboard-header">
+                <tr>
                   <th>Rank</th>
                   <th>Technician</th>
                   <th>Completed</th>
-                  <th>Rejection Rate</th>
-                  <th>Avg Response Time</th>
-                  <th>Avg Work Duration</th>
+                  <th>Rejection</th>
+                  <th>Avg Response</th>
+                  <th>Avg Duration</th>
                   <th>Score</th>
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <tr key={i} className="leaderboard-row">
-                      <td><div className="skeleton-col skeleton-rank"></div></td>
-                      <td><div className="skeleton-col skeleton-name"></div></td>
-                      <td><div className="skeleton-col skeleton-small"></div></td>
-                      <td><div className="skeleton-col skeleton-small"></div></td>
-                      <td><div className="skeleton-col skeleton-small"></div></td>
-                      <td><div className="skeleton-col skeleton-small"></div></td>
-                      <td><div className="skeleton-col skeleton-score"></div></td>
-                    </tr>
-                  ))
-                ) : (
-                  achievements.map((tech, index) => (
-                    <tr
-                      key={tech.technicianId?.toString() || index}
-                      className={`leaderboard-row ${index % 2 === 0 ? 'even' : 'odd'}`}
-                    >
-                      <td className="rank">
-                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
-                      </td>
-                      <td>{tech.name}</td>
-                      <td>{tech.completedJobs ?? 0}</td>
-                      <td>{tech.rejectionRate}</td>
-                      <td>{tech.avgResponseTimeMins} mins</td>
-                      <td>{tech.avgCompletionTimeMins} mins</td>
-                      <td className="score">{isNaN(tech.score) ? '0.0' : tech.score.toFixed(1)}</td>
-                    </tr>
-                  ))
-                )}
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)
+                  : list.length === 0
+                  ? <tr><td colSpan={7} className="no-data">No data available</td></tr>
+                  : list.map((t, i) => <LiveRow data={t} idx={i} key={t.technicianId || i} />)}
               </tbody>
             </table>
           </div>
 
-          <div className="leaderboard-footer">
-            <div className="leaderboard-badges">
-              <div>🏆 High Score</div>
-              <div>⏱️ Fast Response</div>
-              <div>✅ Reliable Worker</div>
+          <footer className="lb-footer">
+            <div className="lb-badges">
+              <span>🏆 High Score</span>
+              <span>⏱️ Fast Response</span>
+              <span>✅ Reliable</span>
             </div>
-          </div>
+          </footer>
         </div>
-      </div>
-    </div>
+      </main>
+    </AdminLayout>
+  );
+}
+
+/* ---------- Skeleton Row ---------- */
+function SkeletonRow() {
+  return (
+    <tr className="lb-row">
+      <td><div className="skel skel-rank" /></td>
+      <td><div className="skel skel-name" /></td>
+      <td><div className="skel skel-sm" /></td>
+      <td><div className="skel skel-sm" /></td>
+      <td><div className="skel skel-sm" /></td>
+      <td><div className="skel skel-sm" /></td>
+      <td><div className="skel skel-score" /></td>
+    </tr>
+  );
+}
+
+/* ---------- Live Row ---------- */
+function LiveRow({ data, idx }) {
+  const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+  const rejectClr = +data.rejectionRate.replace('%','') > 10 ? 'text-warn' : 'text-ok';
+
+  return (
+    <tr className={`lb-row ${idx % 2 ? 'even' : 'odd'}`}>
+      <td className="rank">{medal}</td>
+      <td className="tech">
+        <div className="tech-badge">{data.name.charAt(0)}</div>
+        <span>{data.name}</span>
+      </td>
+      <td>{data.completedJobs ?? 0}</td>
+      <td className={rejectClr}>{data.rejectionRate}</td>
+      <td>{data.avgResponseTimeMins} min</td>
+      <td>{data.avgCompletionTimeMins} min</td>
+      <td className="score">{Number(data.score).toFixed(1)}</td>
+    </tr>
   );
 }

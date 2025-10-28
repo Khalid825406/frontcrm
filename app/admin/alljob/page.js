@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Sidebar from '../../components/Sidebar';
-import Topbar from '../../components/Topbar';
 import '../alljob/all.css';
-import { SquarePen, Trash2 } from 'lucide-react';
+import { SquarePen, Trash2, Search, Filter, Download, RefreshCw } from 'lucide-react';
 import EditJobModal from './EditJobModal';
 import {toast} from 'react-hot-toast'
+import AdminLayout from '@/app/components/AdminLayout';
 
 export default function AllOtherJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -36,7 +35,7 @@ export default function AllOtherJobsPage() {
       setJobs(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
-      alert('Failed to fetch jobs');
+      toast.error('Failed to fetch jobs');
     } finally {
       setLoading(false);
     }
@@ -53,20 +52,20 @@ export default function AllOtherJobsPage() {
       });
 
       if (res.status === 200) {
-        toast.success('Job deleted successfully')
+        toast.success('Job deleted successfully');
         fetchJobs();
       } else {
-        alert(res.data.message || 'Failed to delete job');
+        toast.error(res.data.message || 'Failed to delete job');
       }
     } catch (err) {
       console.error('Delete failed:', err);
-      alert('Error deleting job');
+      toast.error('Error deleting job');
     }
   }
 
   async function handleDeleteSelected() {
     if (selectedJobIds.length === 0) {
-      alert('No jobs selected');
+      toast.error('No jobs selected');
       return;
     }
 
@@ -80,12 +79,12 @@ export default function AllOtherJobsPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-      toast.success('Selected jobs deleted')
+      toast.success('Selected jobs deleted');
       setSelectedJobIds([]);
       fetchJobs();
     } catch (err) {
       console.error(err);
-      alert('Error deleting selected jobs');
+      toast.error('Error deleting selected jobs');
     }
   }
 
@@ -110,9 +109,15 @@ export default function AllOtherJobsPage() {
   }
 
   function getStatusColor(status) {
-    if (status === 'Approved') return '#4CAF50';
-    if (status === 'Rejected') return '#f44336';
-    return '#ff9800';
+    if (status === 'Approved') return '#10b981';
+    if (status === 'Rejected') return '#ef4444';
+    return '#f59e0b';
+  }
+
+  function getStatusBgColor(status) {
+    if (status === 'Approved') return '#dcfce7';
+    if (status === 'Rejected') return '#fee2e2';
+    return '#fef3c7';
   }
 
   const filteredJobs = jobs
@@ -135,239 +140,258 @@ export default function AllOtherJobsPage() {
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <Sidebar role="admin" />
-      <main
-        style={{
-          flex: 1,
-          backgroundColor: '#f9f9f9',
-          marginLeft: 240,
-          paddingTop: 60,
-          padding: 20,
-          overflowY: 'auto',
-        }}
-        className="responvice"
-      >
-        <Topbar username="Admin" />
-        <div style={{ width: '100%', margin: '60px auto' }}>
-          <div
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 10,
-              padding: 20,
-              boxShadow: '0 1px 5px rgba(0,0,0,0.1)',
-              overflowX: 'auto',
-              marginLeft:'24px'
-            }}
-            className='newall'
-          >
-            <div style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
-              <input
-                type="text"
-                placeholder="Search by name, phone, work type, location..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc', width: '60%' }}
-              />
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value);
-                  setCurrentPage(1);
-                }}
-                style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-              >
-                <option value="">All Status</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <span style={{ color: '#666', fontSize: 14 }}>
-                Showing {filteredJobs.length} job(s)
-              </span>
+    <AdminLayout>
+      <div className="job-management-container">
+        <main className="main-content">
+          <div className="content-wrapper">
+            <div className="page-header">
+              <h1 className="page-title">Job Management</h1>
+              <button onClick={fetchJobs} className="refresh-btn">
+                <RefreshCw size={16} />
+                Refresh
+              </button>
             </div>
 
-            <button
-              onClick={handleDeleteSelected}
-              disabled={selectedJobIds.length === 0}
-              style={{
-                marginBottom: 10,
-                padding: '8px 16px',
-                backgroundColor: '#f44336',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                cursor: selectedJobIds.length === 0 ? 'not-allowed' : 'pointer',
-              }}
-            >
-              Delete Selected ({selectedJobIds.length})
-            </button>
+            <div className="card">
+              {/* Search and Filter Section */}
+              <div className="filter-section">
+                <div className="search-box">
+                  <Search size={20} className="search-icon" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, phone, work type, location..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="search-input"
+                  />
+                </div>
+                
+                <div className="filter-controls">
+                  <div className="filter-group">
+                    <Filter size={20} className="filter-icon" />
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => {
+                        setStatusFilter(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      className="filter-select"
+                    >
+                      <option value="">All Status</option>
+                      <option value="Approved">Approved</option>
+                      <option value="Rejected">Rejected</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                  </div>
 
-            {loading ? (
-              <SkeletonTableRow />
-            ) : (
-              <>
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#293ace' }}>
-                      <th style={thStyle}>
-                        <input
-                          type="checkbox"
-                          checked={
-                            currentJobs.length > 0 &&
-                            currentJobs.every((job) => selectedJobIds.includes(job._id))
-                          }
-                          onChange={toggleSelectAll}
-                        />
-                      </th>
-                      <th style={thStyle}>Customer</th>
-                      <th style={thStyle}>Phone</th>
-                      <th style={thStyle}>Work Type</th>
-                      <th style={thStyle}>Reason</th>
-                      <th style={thStyle}>Date/Time</th>
-                      <th style={thStyle}>Location</th>
-                      <th style={thStyle}>Priority</th>
-                      <th style={thStyle}>Remarks</th>
-                      <th style={thStyle}>Created By</th>
-                      <th style={thStyle}>Status</th>
-                      <th style={thStyle}>Created At</th>
-                      <th style={thStyle}>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentJobs.length === 0 ? (
-                      <tr>
-                        <td colSpan="13" style={{ textAlign: 'center', padding: 20 }}>
-                          No jobs found.
-                        </td>
-                      </tr>
-                    ) : (
-                      currentJobs.map((job) => (
-                        <tr key={job._id} className="back-border">
-                          <td style={tdStyle}>
+                  <span className="results-count">
+                    {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''} found
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <button
+                  onClick={handleDeleteSelected}
+                  disabled={selectedJobIds.length === 0}
+                  className={`delete-selected-btn ${selectedJobIds.length === 0 ? 'disabled' : ''}`}
+                >
+                  <Trash2 size={16} />
+                  Delete Selected ({selectedJobIds.length})
+                </button>
+              </div>
+
+              {/* Table Section */}
+              {loading ? (
+                <SkeletonTableRow />
+              ) : (
+                <>
+                  <div className="table-container">
+                    <table className="job-table">
+                      <thead>
+                        <tr className="table-header">
+                          <th className="checkbox-cell">
                             <input
                               type="checkbox"
-                              checked={selectedJobIds.includes(job._id)}
-                              onChange={() => toggleJobSelection(job._id)}
+                              checked={
+                                currentJobs.length > 0 &&
+                                currentJobs.every((job) => selectedJobIds.includes(job._id))
+                              }
+                              onChange={toggleSelectAll}
+                              className="checkbox"
                             />
-                          </td>
-                          <td style={tdStyle}>{job.customerName}</td>
-                          <td style={tdStyle}>{job.customerPhone}</td>
-                          <td style={tdStyle}>{job.workType}</td>
-                          <td style={tdStyle}>{job.reason}</td>
-                          <td style={tdStyle}>{new Date(job.datetime).toLocaleString()}</td>
-                          <td style={tdStyle}>{job.location}</td>
-                          <td style={tdStyle}>{job.priority}</td>
-                          <td style={tdStyle} title={job.remarks}>
-                            {job.remarks?.split(' ').slice(0, 5).join(' ') +
-                              (job.remarks?.split(' ').length > 5 ? '...' : '')}
-                          </td>
-                          <td style={tdStyle}>
-                            {job.createdBy?.username
-                              ? `${job.createdBy.username} (${job.createdBy.role})`
-                              : 'N/A'}
-                          </td>
-                          <td
-                            style={{
-                              ...tdStyle,
-                              color: getStatusColor(getStatus(job)),
-                              fontWeight: 600,
-                            }}
-                          >
-                            <span className="mystay">{getStatus(job)}</span>
-                          </td>
-                          <td style={tdStyle}>{new Date(job.createdAt).toLocaleDateString()}</td>
-                          <td style={tdStyle}>
-                            <button onClick={() => setEditingJob(job)} className="Edit">
-                              <SquarePen />
-                            </button>
-
-                            
-                            {editingJob && (
-                              <EditJobModal
-                                job={editingJob}
-                                onClose={() => setEditingJob(null)}
-                                onSuccess={fetchJobs}
-                              />
-                            )}
-
-                            <button onClick={() => handleDelete(job._id)} className="detedd">
-                              <Trash2 />
-                            </button>
-                          </td>
+                          </th>
+                          <th className="sortable-header">Customer</th>
+                          <th className="sortable-header">Phone</th>
+                          <th className="sortable-header">Work Type</th>
+                          <th className="sortable-header">Reason</th>
+                          <th className="sortable-header">Date/Time</th>
+                          <th className="sortable-header">Location</th>
+                          <th className="sortable-header">Priority</th>
+                          <th className="sortable-header">Remarks</th>
+                          <th className="sortable-header">Created By</th>
+                          <th className="sortable-header">Status</th>
+                          <th className="sortable-header">Created At</th>
+                          <th className="action-header">Actions</th>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      </thead>
+                      <tbody>
+                        {currentJobs.length === 0 ? (
+                          <tr>
+                            <td colSpan="13" className="no-data-cell">
+                              <div className="no-data-message">
+                                <i className="fas fa-inbox"></i>
+                                <p>No jobs found</p>
+                              </div>
+                            </td>
+                          </tr>
+                        ) : (
+                          currentJobs.map((job) => (
+                            <tr key={job._id} className="table-row">
+                              <td className="checkbox-cell">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedJobIds.includes(job._id)}
+                                  onChange={() => toggleJobSelection(job._id)}
+                                  className="checkbox"
+                                />
+                              </td>
+                              <td className="customer-cell">
+                                <div className="customer-info">
+                                  <span className="customer-name">{job.customerName}</span>
+                                </div>
+                              </td>
+                              <td className="phone-cell">{job.customerPhone}</td>
+                              <td className="work-type-cell">
+                                <span className="work-type-badge">{job.workType}</span>
+                              </td>
+                              <td className="reason-cell">{job.reason}</td>
+                              <td className="datetime-cell">
+                                {new Date(job.datetime).toLocaleString()}
+                              </td>
+                              <td className="location-cell">{job.location}</td>
+                              <td className="priority-cell">
+                                <span className={`priority-badge ${job.priority?.toLowerCase()}`}>
+                                  {job.priority}
+                                </span>
+                              </td>
+                              <td className="remarks-cell" title={job.remarks}>
+                                {job.remarks?.split(' ').slice(0, 5).join(' ') +
+                                  (job.remarks?.split(' ').length > 5 ? '...' : '')}
+                              </td>
+                              <td className="created-by-cell">
+                                {job.createdBy?.username
+                                  ? `${job.createdBy.username} (${job.createdBy.role})`
+                                  : 'N/A'}
+                              </td>
+                              <td className="status-cell">
+                                <span 
+                                  className="status-badge"
+                                  style={{
+                                    backgroundColor: getStatusBgColor(getStatus(job)),
+                                    color: getStatusColor(getStatus(job))
+                                  }}
+                                >
+                                  {getStatus(job)}
+                                </span>
+                              </td>
+                              <td className="created-at-cell">
+                                {new Date(job.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="action-cell">
+                                <div className="action-buttons-cell">
+                                  <button 
+                                    onClick={() => setEditingJob(job)} 
+                                    className="edit-btn"
+                                    title="Edit job"
+                                  >
+                                    <SquarePen size={16} />
+                                  </button>
+                                  <button 
+                                    onClick={() => handleDelete(job._id)} 
+                                    className="delete-btn"
+                                    title="Delete job"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
 
-                <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', gap: 10 }}>
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                    disabled={currentPage === 1}
-                    style={{ padding: '6px 12px', borderRadius: 4 }}
-                  >
-                    Prev
-                  </button>
-                  <span>
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    style={{ padding: '6px 12px', borderRadius: 4 }}
-                  >
-                    Next
-                  </button>
-                </div>
-              </>
-            )}
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                        disabled={currentPage === 1}
+                        className="pagination-btn"
+                      >
+                        Previous
+                      </button>
+                      
+                      <div className="pagination-info">
+                        <span>Page {currentPage} of {totalPages}</span>
+                      </div>
+                      
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className="pagination-btn"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+
+      {editingJob && (
+        <EditJobModal
+          job={editingJob}
+          onClose={() => setEditingJob(null)}
+          onSuccess={fetchJobs}
+        />
+      )}
+    </AdminLayout>
   );
 }
 
 function SkeletonTableRow({ rowCount = 8, colCount = 13 }) {
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
-      <thead>
-        <tr style={{ backgroundColor: '#293ace' }}>
-          {Array.from({ length: colCount }).map((_, idx) => (
-            <th key={idx} style={thStyle}></th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {Array.from({ length: rowCount }).map((_, rowIndex) => (
-          <tr key={rowIndex} className="skeleton-row">
-            {Array.from({ length: colCount }).map((_, colIndex) => (
-              <td key={colIndex} style={tdStyle}>
-                <div className="skeleton-line" />
-              </td>
+    <div className="table-container">
+      <table className="job-table">
+        <thead>
+          <tr className="table-header">
+            {Array.from({ length: colCount }).map((_, idx) => (
+              <th key={idx} className="skeleton-header"></th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {Array.from({ length: rowCount }).map((_, rowIndex) => (
+            <tr key={rowIndex} className="skeleton-row">
+              {Array.from({ length: colCount }).map((_, colIndex) => (
+                <td key={colIndex} className="skeleton-cell">
+                  <div className="skeleton-line" />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
-
-const thStyle = {
-  textAlign: 'left',
-  padding: '12px',
-  fontWeight: 600,
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-  color: '#fff',
-};
-
-const tdStyle = {
-  padding: '10px 12px',
-  fontSize: 14,
-  whiteSpace: 'nowrap',
-};

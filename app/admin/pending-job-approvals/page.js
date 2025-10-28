@@ -1,19 +1,15 @@
 'use client';
-
 import { useEffect, useState } from 'react';
-import Sidebar from '@/app/components/Sidebar';
-import Topbar from '@/app/components/Topbar';
 import '../pending-job-approvals/PendingJobsPage.css';
-import {toast} from 'react-hot-toast'
+import { toast } from 'react-hot-toast';
+import AdminLayout from '@/app/components/AdminLayout';
 
 export default function PendingJobsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  useEffect(() => { fetchJobs(); }, []);
 
   async function fetchJobs() {
     setLoading(true);
@@ -24,14 +20,12 @@ export default function PendingJobsPage() {
       });
       const data = await res.json();
       if (Array.isArray(data)) {
-        const pending = data.filter((job) => !job.approved && !job.rejected);
-        setJobs(pending);
+        setJobs(data.filter((j) => !j.approved && !j.rejected));
       } else {
         setJobs([]);
       }
-    } catch (err) {
-      console.error(err);
-      alert('Error fetching jobs');
+    } catch {
+      toast.error('Failed to load jobs');
     } finally {
       setLoading(false);
     }
@@ -43,95 +37,123 @@ export default function PendingJobsPage() {
     try {
       const res = await fetch(
         `https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}/${approve ? 'approve' : 'reject'}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
       );
-      if (!res.ok) {
-        const errData = await res.json();
-        alert(errData.message || 'Error updating job');
-      } else {
-        toast.success(`Job ${approve ? 'approved' : 'rejected'} successfully`)
-        fetchJobs();
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('Network error')
+      if (!res.ok) throw new Error();
+      toast.success(`Job ${approve ? 'approved' : 'rejected'}`);
+      fetchJobs();
+    } catch {
+      toast.error('Update failed');
     } finally {
       setActionLoading(null);
     }
   }
 
-
   return (
-    <div className="pending-layout">
-      <Sidebar role="admin" />
+    <AdminLayout>
+      <section className="pj-container">
+        <header className="pj-header">
+          <h1 className="pj-title">Pending Job Approvals</h1>
+          <p className="pj-subtitle">Review and approve jobs before they go live.</p>
+        </header>
 
-      <main className="pending-main">
-        <Topbar username="Admin" />
+        {loading ? (
+          <Skeleton />
+        ) : jobs.length === 0 ? (
+          <Empty />
+        ) : (
+          <Table data={jobs} actionLoading={actionLoading} onAction={handleJobApproval} />
+        )}
+      </section>
+    </AdminLayout>
+  );
+}
 
-        <div className="pending-card">
-          {loading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="skeleton-row">
-                <div className="skeleton skeleton-text" style={{ width: '20%' }}></div>
-                <div className="skeleton skeleton-text" style={{ width: '20%' }}></div>
-                <div className="skeleton skeleton-text" style={{ width: '25%' }}></div>
-                <div className="skeleton skeleton-text" style={{ width: '15%' }}></div>
-                <div className="skeleton skeleton-button"></div>
-              </div>
-            ))
-          ) : jobs.length === 0 ? (
-            <p>No pending jobs found.</p>
-          ) : (
-            <div className="table-wrapper">
-              <table className="pending-table">
-                <thead>
-                  <tr>
-                    <th>Customer</th>
-                    <th>Work Type</th>
-                    <th>Date/Time</th>
-                    <th>Priority</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobs.map((job) => (
-                    <tr key={job._id}>
-                      <td>{job.customerName}</td>
-                      <td>{job.workType}</td>
-                      <td>{new Date(job.datetime).toLocaleString()}</td>
-                      <td>{job.priority}</td>
-                      <td>
-                        <button
-                          onClick={() => handleJobApproval(job._id, true)}
-                          disabled={actionLoading?.jobId === job._id && actionLoading?.action === 'approve'}
-                          className="btn-approve"
-                        >
-                          {actionLoading?.jobId === job._id && actionLoading?.action === 'approve' ? 'Approving...' : 'Approve'}
-                        </button>
+/* ---------- sub-components ---------- */
+function Table({ data, actionLoading, onAction }) {
+  return (
+    <div className="pj-table-wrap">
+      <table className="pj-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Work Type</th>
+            <th>Date / Time</th>
+            <th>Priority</th>
+            <th className="pj-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((j) => (
+            <tr key={j._id}>
+              <td data-label="Customer"><span className="pj-customer">{j.customerName}</span></td>
+              <td data-label="Work Type"><span className="pj-worktype">{j.workType}</span></td>
+              <td data-label="Date / Time">{new Date(j.datetime).toLocaleString()}</td>
+              <td data-label="Priority"><PriorityBadge val={j.priority} /></td>
+              <td data-label="Actions" className="pj-right">
+                <div className="pj-actions">
+                  <button
+                    onClick={() => onAction(j._id, true)}
+                    disabled={actionLoading?.jobId === j._id && actionLoading?.action === 'approve'}
+                    className="pj-btn pj-approve"
+                  >
+                    {actionLoading?.jobId === j._id && actionLoading?.action === 'approve' ? 'Approving…' : 'Approve'}
+                  </button>
+                  <button
+                    onClick={() => onAction(j._id, false)}
+                    disabled={actionLoading?.jobId === j._id && actionLoading?.action === 'reject'}
+                    className="pj-btn pj-reject"
+                  >
+                    {actionLoading?.jobId === j._id && actionLoading?.action === 'reject' ? 'Rejecting…' : 'Reject'}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
-                        <button
-                          onClick={() => handleJobApproval(job._id, false)}
-                          disabled={actionLoading?.jobId === job._id && actionLoading?.action === 'reject'}
-                          className="btn-reject"
-                        >
-                          {actionLoading?.jobId === job._id && actionLoading?.action === 'reject' ? 'Rejecting...' : 'Reject'}
-                        </button>
+function PriorityBadge({ val }) {
+  const map = {
+    low: { bg: '#dbeafe', color: '#1e40af' },
+    medium: { bg: '#fef3c7', color: '#d97706' },
+    high: { bg: '#fee2e2', color: '#dc2626' },
+  };
+  const style = map[val?.toLowerCase()] || map.medium;
+  return (
+    <span className="pj-badge" style={{ background: style.bg, color: style.color }}>
+      {val}
+    </span>
+  );
+}
 
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+function Skeleton() {
+  return (
+    <div className="pj-skeleton">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="pj-skel-row">
+          <div className="pj-skel" style={{ width: '25%' }} />
+          <div className="pj-skel" style={{ width: '20%' }} />
+          <div className="pj-skel" style={{ width: '30%' }} />
+          <div className="pj-skel" style={{ width: '10%' }} />
+          <div className="pj-skel" style={{ width: '80px' }} />
         </div>
-      </main>
+      ))}
+    </div>
+  );
+}
+
+function Empty() {
+  return (
+    <div className="pj-empty">
+      <svg width="80" height="80" fill="none" viewBox="0 0 24 24">
+        <path stroke="#cbd5e1" strokeWidth="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <h3>All caught up</h3>
+      <p>No pending jobs to review.</p>
     </div>
   );
 }

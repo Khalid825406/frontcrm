@@ -25,7 +25,7 @@ export default function TechnicianJobsPage() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    axios.get('https://new-crm-sdcn.onrender.com/api/user/dashboard', {
+    axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/user/dashboard', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => {
@@ -41,7 +41,7 @@ export default function TechnicianJobsPage() {
   const fetchJobs = async () => {
     try {
       const token = localStorage.token;
-      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/assigned-jobs-status', {
+      const res = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/assigned-jobs-status', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const filtered = res.data.filter(job =>
@@ -63,7 +63,7 @@ export default function TechnicianJobsPage() {
 
     try {
       const token = localStorage.token;
-      await axios.post(`https://new-crm-sdcn.onrender.com/api/admin/accept-job/${jobId}`, {}, {
+      await axios.post(`https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/accept-job/${jobId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchJobs();
@@ -82,7 +82,7 @@ export default function TechnicianJobsPage() {
     setLoadingActionType('reject');
     try {
       const token = localStorage.token;
-      await axios.post(`https://new-crm-sdcn.onrender.com/api/admin/reject-job/${selectedJobId}`, {
+      await axios.post(`https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/reject-job/${selectedJobId}`, {
         reason,
       }, {
         headers: { Authorization: `Bearer ${token}` },
@@ -119,7 +119,7 @@ export default function TechnicianJobsPage() {
       const endpoint = uploadType === 'start' ? 'start-work' : 'complete-work';
 
       await axios.post(
-        `https://new-crm-sdcn.onrender.com/api/technician/${endpoint}/${uploadJobId}`,
+        `https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/technician/${endpoint}/${uploadJobId}`,
         formData,
         {
           headers: {

@@ -39,7 +39,7 @@ export default function NewCreateJobPage() {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          `https://new-crm-sdcn.onrender.com/api/jobs/customers?query=${value}`,
+          `https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/jobs/customers?query=${value}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setSuggestions(res.data || []);
@@ -107,7 +107,7 @@ export default function NewCreateJobPage() {
       });
 
       const token = localStorage.getItem('token');
-      await axios.post('https://new-crm-sdcn.onrender.com/api/jobs', data, {
+      await axios.post('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/jobs', data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -141,7 +141,7 @@ export default function NewCreateJobPage() {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const res = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
+        const res = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/staff/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

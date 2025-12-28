@@ -21,7 +21,7 @@ export default function StaffJobsPage() {
 
       try {
         // 🔹 Fetch jobs
-        const jobsRes = await fetch('https://new-crm-sdcn.onrender.com/api/jobs/staff/jobs', {
+        const jobsRes = await fetch('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/jobs/staff/jobs', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!jobsRes.ok) throw new Error('Failed to fetch jobs');
@@ -36,7 +36,7 @@ export default function StaffJobsPage() {
 
       try {
         // 🔹 Fetch username
-        const userRes = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
+        const userRes = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/staff/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsername(userRes.data.name); // backend is sending `{ name: "username" }`

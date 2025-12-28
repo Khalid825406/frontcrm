@@ -37,7 +37,7 @@ export default function TechnicianDashboard() {
         await requestForToken();
 
         const resUser = await axios.get(
-          'https://new-crm-sdcn.onrender.com/api/user/dashboard',
+          'https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/user/dashboard',
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -46,7 +46,7 @@ export default function TechnicianDashboard() {
         }
 
         const resJobs = await axios.get(
-          'https://new-crm-sdcn.onrender.com/api/admin/assigned-jobs-status',
+          'https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/assigned-jobs-status',
           { headers: { Authorization: `Bearer ${token}` } }
         );
 

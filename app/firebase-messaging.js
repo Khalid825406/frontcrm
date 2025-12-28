@@ -29,7 +29,7 @@ export const requestForToken = async () => {
 
     if (currentToken) {
       console.log("✅ FCM Token:", currentToken);
-      await fetch("https://new-crm-sdcn.onrender.com/api/notifications/save-fcm-token", {
+      await fetch("https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/notifications/save-fcm-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

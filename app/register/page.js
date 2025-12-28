@@ -26,7 +26,7 @@ export default function RegisterPage() {
 
     try {
       const formattedPhone = `+968${form.phone}`;
-      const res = await axios.post('https://new-crm-sdcn.onrender.com/api/auth/register', {
+      const res = await axios.post('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/auth/register', {
         username: form.username,
         password: form.password,
         role: form.role,

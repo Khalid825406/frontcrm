@@ -22,13 +22,13 @@ export default function StaffDashboard() {
     const fetchData = async () => {
       try {
         // Username
-        const resUser = await axios.get('https://new-crm-sdcn.onrender.com/api/staff/me', {
+        const resUser = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/staff/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsername(resUser.data.name);
 
         // Jobs
-        const resJobs = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+        const resJobs = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-jobs', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const allJobs = Array.isArray(resJobs.data) ? resJobs.data : [];

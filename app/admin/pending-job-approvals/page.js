@@ -15,7 +15,7 @@ export default function PendingJobsPage() {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      const res = await fetch('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-jobs', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -36,7 +36,7 @@ export default function PendingJobsPage() {
     const token = localStorage.getItem('token');
     try {
       const res = await fetch(
-        `https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}/${approve ? 'approve' : 'reject'}`,
+        `https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/jobs/${jobId}/${approve ? 'approve' : 'reject'}`,
         { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error();

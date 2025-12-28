@@ -14,7 +14,7 @@ export default function RejectedJobsPage() {
   const fetchRejectedJobs = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      const res = await fetch('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-jobs', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();

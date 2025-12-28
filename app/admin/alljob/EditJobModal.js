@@ -60,7 +60,7 @@ export default function EditJobModal({ job, onClose, onSuccess }) {
       });
 
       await axios.put(
-        `https://new-crm-sdcn.onrender.com/api/jobs/${job._id}`,
+        `https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/jobs/${job._id}`,
         data,
         {
           headers: { Authorization: `Bearer ${token}` },

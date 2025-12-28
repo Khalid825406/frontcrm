@@ -14,7 +14,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const res = await axios.put(`https://new-crm-sdcn.onrender.com/api/user/${user._id}`, {
+      const res = await axios.put(`https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/user/${user._id}`, {
         username,
         phone,
       });

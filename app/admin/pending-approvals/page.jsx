@@ -14,7 +14,7 @@ export default function PendingApprovalsPage() {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('https://new-crm-sdcn.onrender.com/api/admin/all-users', {
+      const res = await fetch('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-users', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -30,7 +30,7 @@ export default function PendingApprovalsPage() {
     const token = localStorage.getItem('token');
     try {
       const res = await fetch(
-        `https://new-crm-sdcn.onrender.com/api/admin/${action}-user/${id}`,
+        `https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/${action}-user/${id}`,
         { method: action === 'approve' ? 'PUT' : 'DELETE', headers: { Authorization: `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error();

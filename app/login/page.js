@@ -43,7 +43,7 @@ export default function LoginPage() {
 
     try {
       const res = await axios.post(
-        'https://new-crm-sdcn.onrender.com/api/auth/login',
+        'https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/auth/login',
         { username, password }
       );
 

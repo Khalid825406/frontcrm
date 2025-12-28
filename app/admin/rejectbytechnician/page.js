@@ -26,7 +26,7 @@ export default function AdminRejectedJobsPage() {
 
     try {
       const { data } = await axios.get(
-        'https://new-crm-sdcn.onrender.com/api/admin/assigned-jobs-status',
+        'https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/assigned-jobs-status',
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const rejected = data.filter(

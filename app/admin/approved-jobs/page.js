@@ -38,7 +38,7 @@ export default function ApprovedJobsPage() {
   const fetchJobs = async () => {
     const token = localStorage.getItem('token');
     try {
-      const { data } = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      const { data } = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-jobs', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const approved = data
@@ -59,7 +59,7 @@ export default function ApprovedJobsPage() {
   const fetchTechs = async () => {
     const token = localStorage.getItem('token');
     try {
-      const { data } = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-technicians', {
+      const { data } = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-technicians', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTechs(data);
@@ -78,7 +78,7 @@ export default function ApprovedJobsPage() {
     const token = localStorage.getItem('token');
     try {
       await axios.post(
-        'https://new-crm-sdcn.onrender.com/api/admin/assign-job',
+        'https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/assign-job',
         { jobId: selectedJobId, technicianId: techId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

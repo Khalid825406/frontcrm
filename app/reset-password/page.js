@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
 
     try {
       setIsLoading(true);
-      const res = await axios.post('https://new-crm-sdcn.onrender.com/api/auth/reset-password', {
+      const res = await axios.post('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/auth/reset-password', {
         username,
         newPassword,
       });

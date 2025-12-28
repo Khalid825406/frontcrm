@@ -26,7 +26,7 @@ export default function AllOtherJobsPage() {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const res = await axios.get('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+      const res = await axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-jobs', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,7 +47,7 @@ export default function AllOtherJobsPage() {
 
     const token = localStorage.getItem('token');
     try {
-      const res = await axios.delete(`https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}`, {
+      const res = await axios.delete(`https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/jobs/${jobId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -75,7 +75,7 @@ export default function AllOtherJobsPage() {
     const token = localStorage.getItem('token');
     try {
       for (const jobId of selectedJobIds) {
-        await axios.delete(`https://new-crm-sdcn.onrender.com/api/admin/jobs/${jobId}`, {
+        await axios.delete(`https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/jobs/${jobId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

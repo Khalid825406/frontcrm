@@ -56,10 +56,10 @@ export default function AdminDashboard() {
     }
     try {
       const [uRes, jRes] = await Promise.all([
-        fetch('https://new-crm-sdcn.onrender.com/api/admin/all-users', {
+        fetch('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-users', {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch('https://new-crm-sdcn.onrender.com/api/admin/all-jobs', {
+        fetch('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/all-jobs', {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
     const token = localStorage.getItem('token');
     try {
       const res = await fetch(
-        `https://new-crm-sdcn.onrender.com/api/admin/delete-user/${id}`,
+        `https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/admin/delete-user/${id}`,
         { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
       );
       if (res.ok) {

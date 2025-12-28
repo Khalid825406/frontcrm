@@ -10,7 +10,7 @@ export default function TechnicianLeaderboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('https://new-crm-sdcn.onrender.com/api/technician/achievements')
+    axios.get('https://new-crm-medical-guz9ryfr8-kahlid098s-projects.vercel.app/api/technician/achievements')
       .then(({ data }) => {
         setList(Array.isArray(data) ? data : []);
         setLoading(false);
